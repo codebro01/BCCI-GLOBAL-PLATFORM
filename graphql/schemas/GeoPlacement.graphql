@@ -1,0 +1,7 @@
+type GeoPlacement {
+  id: ID!
+  user: User!
+  latitude: Float!
+  longitude: Float!
+  assignedCell: Cell
+}

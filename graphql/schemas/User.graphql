@@ -1,0 +1,16 @@
+type User {
+  id: ID!
+  fullName: String!
+  email: String!
+  phone: String
+  password: String!
+  roles: [String!]!
+  country: String
+  state: String
+  city: String
+  cluster: Cluster
+  cell: Cell
+  bookmarkedContent: [ID]
+  contributionHistory: [Contribution]
+  spiritualGoals: [String]
+}

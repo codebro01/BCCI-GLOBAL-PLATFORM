@@ -1,0 +1,9 @@
+type Message {
+  id: ID!
+  from: User!
+  to: User
+  cell: Cell
+  cluster: Cluster
+  content: String!
+  timestamp: String!
+}

@@ -1,0 +1,7 @@
+type Event {
+  id: ID!
+  title: String!
+  description: String
+  date: String!
+  attendees: [User]
+}

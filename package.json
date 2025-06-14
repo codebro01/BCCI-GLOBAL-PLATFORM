@@ -1,22 +1,45 @@
 {
   "name": "node-express-api-ts",
-  "description": "Simple api sample in Node",
+  "description": "BCCI GLOBAL PLATFORM API",
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'npm run build && npm run start'",
+    "dev": "nodemon --require tsconfig-paths/register --exec ts-node src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
-  "author": "Google LLC",
-  "license": "Apache-2.0",
+  "author": "Victor Damilola",
+  "license": "",
   "dependencies": {
-    "express": "^4.21.2"
+    "@apollo/server": "^4.12.2",
+    "axios": "^1.9.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.6.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "express-async-errors": "^3.1.1",
+    "graphql": "^16.11.0",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.15.2",
+    "multer": "^2.0.1",
+    "nanoid": "^5.1.5",
+    "nvm": "^0.0.4",
+    "zod": "^3.25.64"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/node": "^20.12.12",
     "nodemon": "^3.1.0",
-    "typescript": "^5.4.5",
-    "@types/node": "^20.12.12"
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.4.5"
   }
 }
