@@ -5,3 +5,7 @@ type GeoPlacement {
   longitude: Float!
   assignedCell: Cell
 }
+
+type Query {
+  hello: String!
+}

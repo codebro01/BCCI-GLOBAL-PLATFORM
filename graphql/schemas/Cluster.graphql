@@ -7,3 +7,7 @@ type Cluster {
   leader: User
   cells: [Cell]
 }
+
+type Query {
+  hello: String!
+}

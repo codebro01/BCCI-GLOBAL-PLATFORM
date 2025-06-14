@@ -7,3 +7,7 @@ type Message {
   content: String!
   timestamp: String!
 }
+
+type Query {
+  hello: String!
+}

@@ -4,3 +4,7 @@ type Attendance {
   date: String!
   status: String!
 }
+
+type Query {
+  hello: String!
+}

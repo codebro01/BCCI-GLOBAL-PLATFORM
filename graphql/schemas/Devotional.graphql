@@ -5,3 +5,7 @@ type Devotional {
   author: User
   date: String!
 }
+
+type Query {
+  hello: String!
+}

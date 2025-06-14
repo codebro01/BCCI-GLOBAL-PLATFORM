@@ -9,3 +9,7 @@ type LearningStage {
   description: String!
   isComplete: Boolean!
 }
+
+type Query {
+  hello: String!
+}

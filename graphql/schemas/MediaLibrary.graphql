@@ -6,3 +6,7 @@ type Media {
   category: String
   dateUploaded: String!
 }
+
+type Query {
+  hello: String!
+}

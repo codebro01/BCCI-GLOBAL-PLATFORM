@@ -5,3 +5,6 @@ type Event {
   date: String!
   attendees: [User]
 }
+type Query {
+  hello: String!
+}

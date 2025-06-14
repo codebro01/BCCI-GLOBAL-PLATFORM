@@ -6,3 +6,7 @@ type Cell {
   leader: User
   announcements: [String]
 }
+
+type Query {
+  hello: String!
+}

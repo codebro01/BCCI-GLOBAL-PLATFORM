@@ -1,6 +1,8 @@
 type User {
   id: ID!
-  fullName: String!
+  firstName: String!
+  surname: String!
+  otherNames: String!  
   email: String!
   phone: String
   password: String!
@@ -14,3 +16,31 @@ type User {
   contributionHistory: [Contribution]
   spiritualGoals: [String]
 }
+ type Query {
+  hello: String!
+}
+
+type Mutation {
+  createUser(user: UserInput!): User!
+}
+
+
+input UserInput {
+  firstName: String!
+  surname: String!
+  otherNames: String!
+  email: String!
+  phone: String
+  password: String!
+  roles: [String!]!
+  country: String
+  state: String
+  city: String
+  clusterId: ID
+  cellId: ID
+  bookmarkedContent: [ID]
+  spiritualGoals: [String]
+}
+
+
+

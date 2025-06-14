@@ -4,3 +4,7 @@ type PrayerRequest {
   request: String!
   submittedAt: String!
 }
+
+type Query {
+  hello: String!
+}

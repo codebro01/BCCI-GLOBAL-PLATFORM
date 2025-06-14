@@ -6,10 +6,11 @@
     "lib": ["ES2020"],
     "baseUrl": ".",
     "paths": {
-      "@controller/*": ["controller/*"],
+    "@controller/*": ["controller/*"],
     "@model/*": ["model/*"],
     "@utils/*": ["utils/*"],
     "@config/*": ["config/*"],
+    "@types/*": ["types/*"],
     "@middlewares/*": ["middlewares/*"],
     "@routes/*": ["routes/*"],
     "@services/*": ["services/*"],
@@ -17,7 +18,7 @@
     "@db/*": ["db/*"],
   },
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "./",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
@@ -25,6 +26,6 @@
     "skipLibCheck": true,
     "sourceMap": true
   },
-  "include": ["src"],
+  "include": ["src", "types", "graphql"],
   "exclude": ["node_modules", "dist"]
 }

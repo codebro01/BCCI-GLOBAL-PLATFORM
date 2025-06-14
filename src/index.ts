@@ -4,10 +4,20 @@ import type { Request, Response } from 'express'
 const express = require('express')
 const { ApolloServer } = require('@apollo/server')
 const { expressMiddleware } = require('@apollo/server/express4')
-const { resolvers } = require('@graphql/resolvers/resolvers')
-const { typeDefs } = require('@graphql/schemas/schemas')
+// const { resolvers } = require('@graphql/resolvers/resolvers')
+// const { typeDefs } = require('@graphql/schemas/schemas')
 const cookieParser = require('cookie-parser')
 const { corsOptionsDelegate } = require('@config/cors')
+// ! graphql-tools
+const { mergeResolvers } = require('@graphql-tools/merge')
+const { mergeTypeDefs } = require('@graphql-tools/merge')
+const { loadFilesSync } = require('@graphql-tools/load-files')
+
+//! graphql !resolvers
+const { UserResolvers } = require('@graphql/resolvers/user.resolver')
+
+// !inbuilt module
+const { join } = require('path')
 // const { startDB } from './db/connectDb.js'
 const cors = require('cors')
 // const { upload } from './config/multer.js'
@@ -39,7 +49,13 @@ app.use(cookieParser())
 
 const PORT = process.env.PORT || 4000
 
-console.log('hellow world')
+const schemaPath = join(__dirname, '..', 'graphql', 'schemas', '*.graphql')
+const resolversPath = join(__dirname, '..', 'graphql', 'resolvers', '*.ts')
+const typeDefs = mergeTypeDefs(loadFilesSync(schemaPath))
+const resolvers = mergeResolvers(loadFilesSync(resolversPath))
+
+console.log('typeDefs', schemaPath)
+console.log('resolvers', resolversPath)
 const startServer = async () => {
   // await startDB()
   const server = new ApolloServer({

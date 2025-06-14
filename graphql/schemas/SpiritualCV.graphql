@@ -6,3 +6,7 @@ type SpiritualCV {
   testimonies: [String]
   trainingsCompleted: [String]
 }
+
+type Query {
+  hello: String!
+}

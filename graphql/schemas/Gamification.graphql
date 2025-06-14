@@ -5,3 +5,7 @@ type Gamification {
   badges: [String]
   certificates: [String]
 }
+
+type Query {
+  hello: String!
+}

@@ -10,5 +10,5 @@ npm run install
 ```
 Then start the server with npm run dev:
 ```sh
-npm run install
+npm run dev
 ```

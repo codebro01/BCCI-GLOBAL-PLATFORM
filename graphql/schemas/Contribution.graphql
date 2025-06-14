@@ -1,0 +1,10 @@
+type Contribution {
+  id: ID!
+  contributionName: String!
+  amount: Int!
+  remark: String! 
+}
+
+type Query {
+  hello: String!
+}
