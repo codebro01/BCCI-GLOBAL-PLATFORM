@@ -1,10 +1,14 @@
 # Node + Express Service Starter
 
-This is a simple API sample in Node.js with express.js based on [Google Cloud Run Quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-nodejs-service).
+This is a robust BCCI Global Platform API built with node js and express.js.
 
 ## Getting Started
 
-Server should run automatically when starting a workspace. To run manually, run:
+After cloning run npm install, run:
 ```sh
-npm run dev
+npm run install
+```
+Then start the server with npm run dev:
+```sh
+npm run install
 ```
