@@ -1,6 +1,6 @@
 # Node + Express Service Starter
 
-This is a robust BCCI Global Platform API built with node js and express.js.
+This is a robust BCCI Global Platform API built with node js and GraphQL.
 
 ## Getting Started
 
