@@ -2,7 +2,7 @@ type User {
   id: ID!
   firstName: String!
   surname: String!
-  otherNames: String!  
+  otherNames: String!
   email: String!
   phone: String
   password: String!
@@ -16,7 +16,7 @@ type User {
   contributionHistory: [Contribution]
   spiritualGoals: [String]
 }
- type Query {
+type Query {
   hello: String!
 }
 
@@ -24,6 +24,15 @@ type Mutation {
   createUser(user: UserInput!): User!
 }
 
+type Mutation {
+  loginUser(user: LoginUserInput!): LoginResponse!
+}
+
+type LoginResponse {
+  user: User
+  token: String
+  error: String
+}
 
 input UserInput {
   firstName: String!
@@ -42,5 +51,7 @@ input UserInput {
   spiritualGoals: [String]
 }
 
-
-
+input LoginUserInput {
+  email: String!
+  password: String!
+}

@@ -5,7 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --require tsconfig-paths/register --exec ts-node src/index.ts",
+    "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/index.js"
   },

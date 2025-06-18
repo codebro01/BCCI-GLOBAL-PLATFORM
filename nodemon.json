@@ -1,5 +1,7 @@
 {
   "watch": ["src"],
-  "ext": "ts,json",
-  "exec": "ts-node --loader ts-node/esm src/index.ts"
+  "ext": "ts,tsx",
+  "ignore": ["node_modules", "dist", "*.test.ts", "*.spec.ts"],
+  "exec": "ts-node-dev --respawn --transpile-only --require tsconfig-paths/register src/index.ts",
+  "legacyWatch": true
 }

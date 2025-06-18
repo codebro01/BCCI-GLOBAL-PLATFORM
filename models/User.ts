@@ -1,11 +1,25 @@
 import { Schema, model, Types } from 'mongoose';
 
 const userSchema = new Schema({
-  fullName: String,
+  firstName: {
+    type: String, 
+    required: true, 
+  }, 
+  surname: {
+    type: String, 
+    required: true, 
+  }, 
+  otherNames: {
+    type: String, 
+    required: true, 
+  }, 
   email: { type: String, unique: true },
   phone: String,
-  passwordHash: String,
-  roles: [String],
+  password: String,
+  roles: {
+    type: Array, 
+    required: true, 
+  },
   location: {
     country: String,
     state: String,
@@ -30,4 +44,6 @@ const userSchema = new Schema({
   serviceCV: { type: Types.ObjectId, ref: 'SpiritualCV' }
 }, { timestamps: true });
 
-export default model('User', userSchema);
+const User =  model('User', userSchema);
+
+module.exports = {User}

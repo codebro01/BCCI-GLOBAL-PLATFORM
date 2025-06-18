@@ -4,48 +4,38 @@ import type { Request, Response } from 'express'
 const express = require('express')
 const { ApolloServer } = require('@apollo/server')
 const { expressMiddleware } = require('@apollo/server/express4')
-// const { resolvers } = require('@graphql/resolvers/resolvers')
-// const { typeDefs } = require('@graphql/schemas/schemas')
+// const { generateToken } = require('@helpers/tokenGenerator')
 const cookieParser = require('cookie-parser')
 const { corsOptionsDelegate } = require('@config/cors')
 // ! graphql-tools
+import type { GraphQLError } from 'graphql'
+
 const { mergeResolvers } = require('@graphql-tools/merge')
 const { mergeTypeDefs } = require('@graphql-tools/merge')
 const { loadFilesSync } = require('@graphql-tools/load-files')
+
+// ! helpers 
+
+const {AppError} = require('@helpers/errorHandler');
+
+
+// ! connect DB 
+
+const {connectDB} = require('@db/connectDB')
 
 //! graphql !resolvers
 const { UserResolvers } = require('@graphql/resolvers/user.resolver')
 
 // !inbuilt module
 const { join } = require('path')
-// const { startDB } from './db/connectDb.js'
 const cors = require('cors')
-// const { upload } from './config/multer.js'
-// const { cloudinaryImageUploader } from './utils/cloudinaryImageUploader.js'
-// const {CorsOptionsDelegate} from '../config/cors'
-// const { Router } from './routes/apiRoutes.js'
+
 const app = express()
 
-app.use(cors(corsOptionsDelegate)) // ✅ this is correct
+app.use(cors(corsOptionsDelegate))
 
 app.use(express.json())
 app.use(cookieParser())
-
-// app.post('/upload', upload.array('images', 5), cloudinaryImageUploader)
-// app.use('/api/v1/predict', predictChickenHealthStatus)
-
-// app.use('/api', Router)
-
-// app.use(express.static(path.join(__dirname, 'public'))) // Serve static files
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'public', 'index.html')) // Handle SPA routing
-// })
-
-// app.get('/api/check-cookie', )
-
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public', 'index.html')); // Adjust accordingly
-// });
 
 const PORT = process.env.PORT || 4000
 
@@ -54,15 +44,38 @@ const resolversPath = join(__dirname, '..', 'graphql', 'resolvers', '*.ts')
 const typeDefs = mergeTypeDefs(loadFilesSync(schemaPath))
 const resolvers = mergeResolvers(loadFilesSync(resolversPath))
 
-console.log('typeDefs', schemaPath)
-console.log('resolvers', resolversPath)
+// console.log('typeDefs', schemaPath)
+// console.log('resolvers', resolversPath)
 const startServer = async () => {
-  // await startDB()
+
+  await connectDB(process.env.MONGO_URI)
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    formatError: (err: GraphQLError) => {
+
+      const originalError = err.originalError as any
+
+      let code = 'INTERNAL_SERVER_ERROR'
+
+      if (
+        originalError &&
+        typeof originalError === 'object' &&
+        'code' in originalError &&
+        typeof originalError.code === 'string'
+      ) {
+        code = originalError.code
+      }
+      return {
+        message: err.message,
+        code:  err.extensions?.code || 'INTERNAL_SERVER_ERRO',
+        path: err.path,
+      }
+    },
   })
   await server.start()
+
+  // console.log(generateToken(64))
 
   app.use(
     '/graphql',
@@ -77,3 +90,5 @@ const startServer = async () => {
 }
 
 startServer()
+
+
