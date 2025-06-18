@@ -12,7 +12,7 @@ type PickUser = Pick<
 class AuthServices {
   async createUser(userData: PickUser) {
 
-    const emailExist = User.find({email: userData.email});
+    const emailExist = await User.findOne({email: userData.email});
     // if(emailExist) throw new AppError('Email Already exist', 'CONFLICT')
     if(emailExist) return graphQLError('Email Already exist', StatusCodes.CONFLICT)
     

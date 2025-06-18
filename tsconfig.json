@@ -4,6 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["ES2020"],
+    "types": ["node"],
     "baseUrl": ".",
     "paths": {
     "@controller/*": ["controller/*"],
@@ -29,6 +30,6 @@
     "skipLibCheck": true,
     "sourceMap": true
   },
-  "include": ["src", "types", "graphql"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
