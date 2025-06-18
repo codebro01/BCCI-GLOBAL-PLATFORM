@@ -1,6 +1,6 @@
 const { GraphQLError } = require('graphql')
 
-const graphQLError = (message, code) => {
+const graphQLError = (message:string, code:string) => {
   throw new GraphQLError(message, {
     extensions: {
       code: code,
