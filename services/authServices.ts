@@ -7,14 +7,14 @@ import { create } from 'domain'
 import type { User as UserType } from '../types/resolvers'
 import type { contextType } from '../types/global'
 
-type PickUser = Pick<
+type userDataType = Pick<
   UserType,
-  'email' | 'firstName' | 'password' | 'surname' | 'otherNames' | 'roles' | 'id'
+  'email' | 'firstName' | 'password' | 'surname' | 'otherNames' | 'roles'
 >
 
 class AuthServices {
-  async createUser(context:contextType, userData: PickUser) {
-    await User.deleteMany()
+  async createUser(context:contextType, userData: userDataType) {
+    // await User.deleteMany()
     const emailExist = await User.findOne({ email: userData.email })
     if (emailExist)
       return graphQLError('Email Already exist', StatusCodes.CONFLICT)
@@ -23,9 +23,21 @@ class AuthServices {
     const tokenUser = createTokenUser(user);
 
     sendCookieResp(context, tokenUser);
-    console.log(user, tokenUser)
-
     return user
+  }
+  async loginUser(context:contextType, userData: Pick<UserType, 'email' | 'password'>) {
+    console.log(userData.email)
+    const user = await User.findOne({ email: userData.email })
+    if (!user)
+      return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND)
+
+   const passwordCorrect =  await user.comparePwd(userData.password);
+   if (!passwordCorrect)
+     return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND) 
+    const tokenUser = createTokenUser(user);
+
+    sendCookieResp(context, tokenUser);
+    return {message: "Login Succesfull!!! 🚀"}
   }
 }
 

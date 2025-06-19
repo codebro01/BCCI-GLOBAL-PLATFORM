@@ -29,9 +29,7 @@ type Mutation {
 }
 
 type LoginResponse {
-  user: User
-  token: String
-  error: String
+  message: String
 }
 
 input UserInput {

@@ -6,7 +6,13 @@ const jwt = require('jsonwebtoken');
 
 
 
-const generateToken = (tokenUser:tokenUserType, tokenSecret:string | undefined ) => {
+const generateAccessToken = (tokenUser:tokenUserType, tokenSecret:string | undefined ) => {
+    if (!tokenSecret) return graphQLError('Missing Token Secret', StatusCodes.BAD_REQUEST)
+    return jwt.sign(tokenUser, tokenSecret, {
+      expiresIn: '24h',
+    });
+}
+const generateRefreshToken = (tokenUser:tokenUserType, tokenSecret:string | undefined ) => {
     if (!tokenSecret) return graphQLError('Missing Token Secret', StatusCodes.BAD_REQUEST)
     return jwt.sign(tokenUser, tokenSecret, {
       expiresIn: '24h',
@@ -25,15 +31,23 @@ const verifyJWT = (token:string): tokenUserType => {
 
 
 const sendCookieResp = (context:contextType, user: tokenUserType) => {
-    const token = generateToken(user, process.env.ACCESS_TOKEN_SECRET)
-    context.res.cookie('token', token, {
+    const accessToken = generateAccessToken(user, process.env.ACCESS_TOKEN_SECRET)
+    const refreshToken = generateAccessToken(user, process.env.REFRESH_TOKEN_SECRET)
+    context.res.cookie('access_token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       //   secure: true,
       sameSite: 'none',
-      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+      maxAge: 1000 * 60 * 15, // 15 MINUETES    
+    })
+    context.res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      //   secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 15, // 24 hours
     })
 }
 
 
-module.exports = {sendCookieResp, verifyJWT, generateToken}
+module.exports = {sendCookieResp, verifyJWT, generateAccessToken, generateRefreshToken}

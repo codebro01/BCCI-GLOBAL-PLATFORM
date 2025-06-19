@@ -7,7 +7,7 @@ const signUpSchema = z.object({
   otherNames: z.string(),
   email: z.string().email({ message: 'Invalid email format' }), // ✅ Fixed
   roles: z.array(z.string()),
-  id: z.string(),
+  id: z.string().optional(),
   password: z
     .string()
     .min(5, { message: 'Password must be at least 5 characters' }),
@@ -23,5 +23,14 @@ const signUpSchema = z.object({
 })
 
 
+const loginSchema = z.object({
+  email: z.string().email({ message: 'Invalid email format' }), // ✅ Fixed
+  password: z
+    .string()
+    .min(5, { message: 'Password must be at least 5 characters' }),
+ 
+})
 
-module.exports = {signUpSchema}
+
+
+module.exports = { signUpSchema, loginSchema }
