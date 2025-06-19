@@ -5,3 +5,6 @@ export type contextType = {
     req: Request
 }
 
+export type RoleType = string[]
+
+

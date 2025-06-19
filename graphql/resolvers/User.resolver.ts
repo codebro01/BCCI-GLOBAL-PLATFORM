@@ -10,6 +10,7 @@ const AuthServices = require('@services/authServices')
 module.exports = {
   Query: {
     hello: () => 'hello world',
+    
   },
   Mutation: {
     createUser: (
