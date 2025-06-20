@@ -35,24 +35,17 @@ const verifyJWT = (token: string): tokenUserType => {
 
 const sendCookieResp = (context: contextType, user: tokenUserType) => {
   const accessToken = generateAccessToken(user, process.env.ACCESS_TOKEN_SECRET)
-  const refreshToken = generateAccessToken(
-    user,
-    process.env.REFRESH_TOKEN_SECRET
-  )
+
   context.res.cookie('access_token', accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    //   secure: true,
-    sameSite: 'none',
+    secure: false, 
+    sameSite: 'lax',
     maxAge: 1000 * 60 * 15, // 15 MINUETES
   })
-  context.res.cookie('refresh_token', refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    //   secure: true,
-    sameSite: 'none',
-    maxAge: 1000 * 60 * 60 * 24 * 15, // 24 hours
-  })
+
+
+
+  return accessToken
 }
 
 module.exports = {

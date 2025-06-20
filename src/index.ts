@@ -9,56 +9,52 @@ const cookieParser = require('cookie-parser')
 const { corsOptionsDelegate } = require('@config/cors')
 // ! graphql-tools
 import type { GraphQLError } from 'graphql'
-
+const resolvers = require('@graphql/resolvers/resolvers')
 const { mergeResolvers } = require('@graphql-tools/merge')
 const { mergeTypeDefs } = require('@graphql-tools/merge')
 const { loadFilesSync } = require('@graphql-tools/load-files')
 
+// ! helpers
 
-// ! helpers 
+const { AppError } = require('@helpers/errorHandler')
 
-const {AppError} = require('@helpers/errorHandler');
+// ! connect DB
 
-
-// ! connect DB 
-
-const {connectDB} = require('@db/connectDB')
-
-//! graphql !resolvers
-const { UserResolvers } = require('@graphql/resolvers/user.resolver')
+const { connectDB } = require('@db/connectDB')
 
 // !inbuilt module
 const { join } = require('path')
 const cors = require('cors')
 
 const app = express()
+app.use(cookieParser())
 
-app.use(cors(corsOptionsDelegate))
+// app.use(cors(corsOptionsDelegate))
+app.use(
+  cors({
+    origin: ['http://localhost:4000', 'http://127.0.0.1:5500'], // or whatever your frontend is
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+  })
+)
 
 app.use(express.json())
-app.use(cookieParser())
 
 const PORT = process.env.PORT || 4000
 
 const schemaPath = join(__dirname, '..', 'graphql', 'schemas', '*.graphql')
-const resolversPath = join(__dirname, '..', 'graphql', 'resolvers', '*.ts')
 const typeDefs = mergeTypeDefs(loadFilesSync(schemaPath))
-const resolvers = mergeResolvers(loadFilesSync(resolversPath))
 
-// console.log('typeDefs', schemaPath)
-// console.log('resolvers', resolversPath)
 const startServer = async () => {
-
   await connectDB(process.env.MONGO_URI)
   const server = new ApolloServer({
     typeDefs,
     resolvers,
     formatError: (err: GraphQLError) => {
-
       const originalError = err.originalError as any
 
       let code = 'INTERNAL_SERVER_ERROR'
-
+      // console.log(err)
       if (
         originalError &&
         typeof originalError === 'object' &&
@@ -69,7 +65,7 @@ const startServer = async () => {
       }
       return {
         message: err.message,
-        code:  err.extensions?.code || 'INTERNAL_SERVER_ERRO',
+        code: err.extensions?.code || 'INTERNAL_SERVER_ERRO',
         path: err.path,
       }
     },
@@ -81,15 +77,16 @@ const startServer = async () => {
   app.use(
     '/graphql',
     expressMiddleware(server, {
-      context: async ({ req, res }: { req: Request; res: Response }) => ({
-        req,
-        res,
-      }),
+      context: async ({ req, res }: { req: Request; res: Response }) => {
+
+        return {
+          req,
+          res,
+        }
+      },
     })
   )
   app.listen(PORT, () => console.log('🚀 Awesome, app connected to port', PORT))
 }
 
 startServer()
-
-

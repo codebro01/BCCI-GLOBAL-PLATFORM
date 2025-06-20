@@ -2,24 +2,12 @@ import type { User } from 'types/resolvers'
 import type { contextType } from 'types/global'
 import type { ZodErrorTypes, ErrorObjectType } from 'types/zod'
 import type { Response, Request } from 'express'
-import type { tokenUserType } from 'types/jwt_tokenUser'
-const { authMiddleware, RBAC } = require('@middlewares/authMiddleware')
-
 const { signUpSchema, loginSchema } = require('@zodSchema/zodSchema')
 const { safeValidate } = require('@helpers/zodInputValidator')
-const UserServices = require('@services/userServices')
+// const { generateToken } = require('@helpers/tokenGenerator')
+const AuthServices = require('@services/authServices')
 
 module.exports = {
-  Query: {
-    users: (_: unknown, {}, context: contextType) => {
-      const user = authMiddleware(context)
-      RBAC(user, ['ADMIN'])
-      return UserServices.getUsers()
-    },
-    user: (_: unknown, { id }: { id: string }, context: contextType) => {
-      return UserServices.getUser(id)
-    },
-  },
   Mutation: {
     createUser: (
       _: unknown,
@@ -36,7 +24,7 @@ module.exports = {
       }
       // console.log({ ...validatedInputs.data })
       /* ... */
-      return UserServices.createUser(context, validatedInputs.data)
+      return AuthServices.createUser(context, validatedInputs.data)
     },
     loginUser: (
       _: unknown,
@@ -52,9 +40,8 @@ module.exports = {
         })
         return
       }
-      console.log({ ...validatedInputs.data })
       /* ... */
-      return UserServices.loginUser(context, validatedInputs.data)
+      return AuthServices.loginUser(context, validatedInputs.data)
     },
   },
 }
