@@ -61,5 +61,10 @@ module.exports = {
       /* ... */
       return UserServices.updateUserPassword(user, passwordData)
     },
+    logoutUser: async (_: unknown, args: unknown, context: contextType) => {
+      const user = await authMiddleware(context)
+
+      return UserServices.logoutUser(user, context)
+    },
   },
 }

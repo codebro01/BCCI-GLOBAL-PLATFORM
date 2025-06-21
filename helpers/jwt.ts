@@ -61,10 +61,16 @@ const sendRefreshTokenCookie = (context: contextType, user: tokenUserType) => {
   return refreshToken
 }
 
+const logout = (context: contextType) => {
+  context.res.clearCookie('access_token');
+  context.res.clearCookie('refresh_token');
+}
+
 module.exports = {
   sendAccessTokenCookie,
   sendRefreshTokenCookie,
   verifyJWT,
   generateAccessToken,
   generateRefreshToken,
+  logout
 }

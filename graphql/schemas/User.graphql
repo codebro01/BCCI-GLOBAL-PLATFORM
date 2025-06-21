@@ -68,6 +68,13 @@ input changePasswordInput {
   oldPassword: String
 }
 
+type logOutResponse {
+  message: String!, 
+  success: Boolean!
+  loggedOutUser: User
+  loggedOutAt: String
+}
+
 type updateUserPasswordResponse {
   message: String
 }
@@ -89,4 +96,5 @@ type Mutation {
   updateUserPassword(
     passwordData: changePasswordInput
   ): updateUserPasswordResponse
+  logoutUser: logOutResponse
 }

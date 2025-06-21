@@ -1,11 +1,10 @@
 const { graphQLError } = require('@helpers/errorHandler')
-const { authMiddleware, RBAC } = require('@middlewares/authMiddleware')
 const bcrypt = require('bcryptjs')
 const { User } = require('@models/User')
 const { StatusCodes } = require('http-status-codes')
+import { contextType } from 'types/global'
 import type { User as UserType, updateUserFields } from 'types/resolvers'
-import type { contextType } from 'types/global'
-import { Console } from 'console'
+const {logout} = require('@helpers/jwt')
 
 class UserServices {
   async getUsers() {
@@ -99,6 +98,21 @@ class UserServices {
     await user.save();
 
     return { message: 'Password has been successfully changed' }
+  }
+
+  async logoutUser (userInfo: Partial<UserType>, context: contextType) {
+    console.log('user in delete')
+    const {id} = userInfo;
+    const user = await User.findById({_id: id});
+    if(!user) graphQLError('Could not find user', StatusCodes.NOT_FOUND);
+    user.refreshToken = '';
+    await user.save();
+    logout(context);
+    return {
+      success: true, 
+      message: 'User successfully logged out'
+    }
+    
   }
 }
 
