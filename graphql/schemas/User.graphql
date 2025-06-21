@@ -41,10 +41,7 @@ input updateUserInput {
   firstName: String
   surname: String
   otherNames: String
-  email: String
   phone: String
-  password: String
-  roles: [String]
   country: String
   state: String
   city: String
@@ -59,6 +56,22 @@ input LoginUserInput {
   password: String!
 }
 
+type DeleteUserResponse {
+  success: Boolean!
+  message: String!
+  deletedUser: User
+  deletedAt: String
+}
+
+input changePasswordInput {
+  newPassword: String
+  oldPassword: String
+}
+
+type updateUserPasswordResponse {
+  message: String
+}
+
 # ! -----------------Queries------------------------------
 
 type Query {
@@ -69,8 +82,11 @@ type Query {
 #! ------------------mutations --------------------------
 
 type Mutation {
-  deleteUser(id: String): String!
-  updateUser(user: updateUserInput): User!
+  deleteUser(id: String): DeleteUserResponse
+  updateUser(user: updateUserInput!): User!
   createUser(user: UserInput!): User!
   loginUser(user: LoginUserInput!): LoginResponse!
+  updateUserPassword(
+    passwordData: changePasswordInput
+  ): updateUserPasswordResponse
 }

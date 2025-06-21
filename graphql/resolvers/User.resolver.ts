@@ -3,9 +3,14 @@ import type { contextType } from 'types/global'
 import type { ZodErrorTypes, ErrorObjectType } from 'types/zod'
 import type { Response, Request } from 'express'
 import type { tokenUserType } from 'types/jwt_tokenUser'
+import { userInfo } from 'os'
 const { authMiddleware, RBAC } = require('@middlewares/authMiddleware')
 
-const { signUpSchema, loginSchema } = require('@zodSchema/zodSchema')
+const {
+  signUpSchema,
+  loginSchema,
+  updateUserSchema,
+} = require('@zodSchema/zodSchema')
 const { safeValidate } = require('@helpers/zodInputValidator')
 const UserServices = require('@services/userServices')
 
@@ -21,40 +26,38 @@ module.exports = {
     },
   },
   Mutation: {
-    createUser: (
+    updateUser: (
       _: unknown,
       { user }: { user: User },
       context: contextType
     ) => {
-      const validatedInputs = safeValidate(signUpSchema, user)
+      const validatedInputs = safeValidate(updateUserSchema, user)
 
+      const resUser = authMiddleware(context)
       if (!validatedInputs.success) {
         validatedInputs.errors.map((error: ErrorObjectType) => {
           throw new Error(error.message)
         })
         return
       }
-      // console.log({ ...validatedInputs.data })
-      /* ... */
-      return UserServices.createUser(context, validatedInputs.data)
+      return UserServices.updateUser(resUser, user)
     },
-    loginUser: (
+    deleteUser: (_: unknown, { id }: { id: string }, context: contextType) => {
+      const user = authMiddleware(context)
+      RBAC(user, ['ADMIN'])
+      /* ... */
+      return UserServices.deleteUser(id)
+    },
+    updateUserPassword: (
       _: unknown,
-      { user }: { user: Pick<User, 'email' | 'password'> },
+      {
+        passwordData,
+      }: { passwordData: { newPassword: string; oldPassword: string } },
       context: contextType
     ) => {
-      console.log('login user', user)
-      const validatedInputs = safeValidate(loginSchema, user)
-
-      if (!validatedInputs.success) {
-        validatedInputs.errors.map((error: ErrorObjectType) => {
-          throw new Error(error.message)
-        })
-        return
-      }
-      console.log({ ...validatedInputs.data })
+      const user = authMiddleware(context)
       /* ... */
-      return UserServices.loginUser(context, validatedInputs.data)
+      return UserServices.updateUserPassword(user, passwordData)
     },
   },
 }

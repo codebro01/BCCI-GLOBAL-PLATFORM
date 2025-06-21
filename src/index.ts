@@ -14,6 +14,9 @@ const { mergeResolvers } = require('@graphql-tools/merge')
 const { mergeTypeDefs } = require('@graphql-tools/merge')
 const { loadFilesSync } = require('@graphql-tools/load-files')
 
+// !middlewares  
+const {authMiddleware} = require('@middlewares/authMiddleware')
+
 // ! helpers
 
 const { AppError } = require('@helpers/errorHandler')
@@ -78,7 +81,6 @@ const startServer = async () => {
     '/graphql',
     expressMiddleware(server, {
       context: async ({ req, res }: { req: Request; res: Response }) => {
-
         return {
           req,
           res,

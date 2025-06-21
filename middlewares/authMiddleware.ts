@@ -2,6 +2,7 @@ const { verifyJWT } = require('@helpers/jwt')
 const { graphQLError } = require('@helpers/errorHandler')
 const { StatusCodes } = require('http-status-codes')
 import { access } from 'fs'
+import { decode } from 'punycode'
 import type { contextType, RoleType } from 'types/global'
 import type { tokenUserType } from 'types/jwt_tokenUser'
 
@@ -14,7 +15,7 @@ const authMiddleware = (context: contextType) => {
 
     if (!decoded)
       graphQLError('Invalid Token provided', StatusCodes.BAD_REQUEST)
-
+    // console.log(decoded)
     return decoded
   } catch (err) {
     graphQLError(

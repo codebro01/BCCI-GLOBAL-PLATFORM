@@ -29,8 +29,26 @@ const loginSchema = z.object({
     .string()
     .min(5, { message: 'Password must be at least 5 characters' }),
  
-})
+  })
 
 
+  const updateUserSchema = z.object({
+    firstName: z.string().optional(),
+    surname: z.string().optional(),
+    otherNames: z.string().optional(),
+    email: z.string().email({ message: 'Invalid email format' }).optional(),
+    roles: z.array(z.string()).optional(),
+    phone: z.string().optional(),
+    country: z.string().optional(),
+    state: z.string().optional(),
+    city: z.string().optional(),
+    cluster: z.record(z.string()).optional(), // { key: value }
+    cell: z.record(z.string()).optional(),
+    bookmarkedContent: z.record(z.string()).optional(),
+    contributionHistory: z.string().optional(),
+    spiritualGoals: z.string().optional(),
+  })
+  
 
-module.exports = { signUpSchema, loginSchema }
+
+module.exports = { signUpSchema, loginSchema, updateUserSchema }
