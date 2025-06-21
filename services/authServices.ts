@@ -1,7 +1,7 @@
 const { User } = require('@models/User')
 const { graphQLError } = require('@helpers/errorHandler')
 const { createTokenUser } = require('@helpers/createTokenUser')
-const { sendCookieResp } = require('@helpers/jwt')
+const { sendAccessTokenCookie, sendRefreshTokenCookie } = require('@helpers/jwt')
 const { StatusCodes } = require('http-status-codes')
 import type { User as UserType } from 'types/resolvers'
 import type { contextType } from 'types/global'
@@ -21,7 +21,8 @@ class AuthServices {
     await user.save()
     const tokenUser = createTokenUser(user)
 
-    sendCookieResp(context, tokenUser)
+    sendAccessTokenCookie(context, tokenUser)
+    sendRefreshTokenCookie(context, tokenUser)
 
     return user
   }
@@ -30,17 +31,22 @@ class AuthServices {
     context: contextType,
     userData: Pick<UserType, 'email' | 'password'>
   ) {
-    console.log(userData.email)
     const user = await User.findOne({ email: userData.email })
+    // console.log(user, 'before chcking pwd')
     if (!user) return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND)
 
     const passwordCorrect = await user.comparePwd(userData.password)
+    // console.log(passwordCorrect, 'check password')
     if (!passwordCorrect)
-      return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND)
+    return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND)
     const tokenUser = createTokenUser(user)
+    sendAccessTokenCookie(context, tokenUser);
+    const refreshToken = sendRefreshTokenCookie(context, tokenUser)
 
-    sendCookieResp(context, tokenUser)
+    // console.log('refresh_token', refreshToken)
 
+    user.refreshToken = refreshToken
+    await user.save()
 
     return { message: 'Login Succesfull!!! 🚀' }
   }

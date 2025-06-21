@@ -16,12 +16,14 @@ const UserServices = require('@services/userServices')
 
 module.exports = {
   Query: {
-    users: (_: unknown, {}, context: contextType) => {
-      const user = authMiddleware(context)
+    users: async (_: unknown, {}, context: contextType) => {
+      const user = await authMiddleware(context)
       RBAC(user, ['ADMIN'])
       return UserServices.getUsers()
     },
-    user: (_: unknown, { id }: { id: string }, context: contextType) => {
+    user: async (_: unknown, { id }: { id: string }, context: contextType) => {
+      const user = await authMiddleware(context)
+      RBAC(user, ['ADMIN'])
       return UserServices.getUser(id)
     },
   },

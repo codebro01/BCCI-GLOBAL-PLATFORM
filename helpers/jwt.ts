@@ -11,7 +11,7 @@ const generateAccessToken = (
   if (!tokenSecret)
     return graphQLError('Missing Token Secret', StatusCodes.BAD_REQUEST)
   return jwt.sign(tokenUser, tokenSecret, {
-    expiresIn: '24h',
+    expiresIn: '15m',
   })
 }
 const generateRefreshToken = (
@@ -21,35 +21,49 @@ const generateRefreshToken = (
   if (!tokenSecret)
     return graphQLError('Missing Token Secret', StatusCodes.BAD_REQUEST)
   return jwt.sign(tokenUser, tokenSecret, {
-    expiresIn: '24h',
+    expiresIn: '5d',
   })
 }
 
-const verifyJWT = (token: string): tokenUserType => {
+const verifyJWT = (token: string, {tokenSecret}: {tokenSecret: string}): tokenUserType | null => {
   try {
-    return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as tokenUserType
+    return jwt.verify(token, tokenSecret) as tokenUserType
   } catch (err) {
-    throw graphQLError('Invalid or expired token', StatusCodes.UNAUTHORIZED)
+    return null;
+    // throw graphQLError('Invalid or expired token', StatusCodes.UNAUTHORIZED)
   }
 }
 
-const sendCookieResp = (context: contextType, user: tokenUserType) => {
-  const accessToken = generateAccessToken(user, process.env.ACCESS_TOKEN_SECRET)
+const sendAccessTokenCookie = (context: contextType, user: tokenUserType) => {
+  const accessToken = generateAccessToken(user, process.env.ACCESS_TOKEN_SECRET);
 
   context.res.cookie('access_token', accessToken, {
     httpOnly: true,
-    secure: false, 
+    secure: false,
     sameSite: 'lax',
     maxAge: 1000 * 60 * 15, // 15 MINUETES
   })
-
-
+ 
 
   return accessToken
 }
+const sendRefreshTokenCookie = (context: contextType, user: tokenUserType) => {
+  const refreshToken = generateAccessToken(user, process.env.REFRESH_TOKEN_SECRET);
+
+ 
+  context.res.cookie('refresh_token', refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax',
+    maxAge: 1000 * 60 * 60 * 24 * 5, // 15 MINUETES
+  })
+
+  return refreshToken
+}
 
 module.exports = {
-  sendCookieResp,
+  sendAccessTokenCookie,
+  sendRefreshTokenCookie,
   verifyJWT,
   generateAccessToken,
   generateRefreshToken,
