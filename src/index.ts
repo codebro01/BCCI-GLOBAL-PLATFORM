@@ -4,7 +4,6 @@ import type { Request, Response } from 'express'
 const express = require('express')
 const { ApolloServer } = require('@apollo/server')
 const { expressMiddleware } = require('@apollo/server/express4')
-// const { generateToken } = require('@helpers/tokenGenerator')
 const cookieParser = require('cookie-parser')
 const { corsOptionsDelegate } = require('@config/cors')
 // ! graphql-tools
@@ -75,7 +74,6 @@ const startServer = async () => {
   })
   await server.start()
 
-  // console.log(generateToken(64))
 
   app.use(
     '/graphql',

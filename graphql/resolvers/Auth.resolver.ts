@@ -1,7 +1,6 @@
 import type { User } from 'types/resolvers'
 import type { contextType } from 'types/global'
-import type { ZodErrorTypes, ErrorObjectType } from 'types/zod'
-import type { Response, Request } from 'express'
+import type {ErrorObjectType } from 'types/zod'
 const { signUpSchema, loginSchema } = require('@zodSchema/zodSchema')
 const { safeValidate } = require('@helpers/zodInputValidator')
 // const { generateToken } = require('@helpers/tokenGenerator')

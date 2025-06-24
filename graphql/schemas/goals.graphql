@@ -1,0 +1,67 @@
+enum CategoryOptions {
+  PRAYER_AND_DEVOTION
+  BIBLE_STUDY
+  EVANGELISM
+  MINISTRY_SERVICE
+  CHURCH_ATTENDANCE
+}
+enum TimeframeOptions {
+  ONE_WEEK
+  TWO_WEEKS
+  THREE_WEEKS
+  ONE_MONTH
+  TWO_MONTHS
+  THREE_MONTHS
+  SIX_MONTHS
+  ONE_YEAR
+  TWO_YEARS
+}
+
+
+type Goal {
+    id: ID!
+    title: String!, 
+    category: CategoryOptions!, 
+    target: String, 
+    timeFrame: String!
+    user: User!
+}
+
+input goalInput {
+    title: String! 
+    category: String! 
+    target: String!
+    timeFrame: String!
+}
+
+
+
+type createGoalResponse {
+    user: ID, 
+    goal: Goal, 
+    success: Boolean!, 
+    message: String!
+}
+type updateGoalResponse {
+    user: ID, 
+    goal: Goal, 
+    success: Boolean!, 
+    message: String!
+}
+
+type deleteGoalResponse {
+    deletedGoal: Goal, 
+     success: Boolean!, 
+    message: String!
+}
+
+type Query {
+  goal(id: String!): Goal!
+  goals: [Goal!]
+}
+
+type Mutation {
+    createGoal(goal: goalInput): createGoalResponse
+    updateGoal(goal: goalInput): updateGoalResponse
+    deleteGoal(id: String): deleteGoalResponse
+}

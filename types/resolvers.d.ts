@@ -34,6 +34,15 @@ export type updateUserFields = Partial<{
   spiritualGoals: [string]
 }>
 
+export type GoalType = {
+  id: ?string
+  user: ?User
+  title: string
+  category: string
+  target: string 
+  timeframe: string 
+}
+
 export type Cluster = {
   id: ID
   name: string
