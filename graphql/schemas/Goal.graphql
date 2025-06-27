@@ -73,5 +73,5 @@ type Query {
 type Mutation {
   createGoal(goal: goalInput!): createGoalResponse
   updateGoal(goal: updateGoalInput!, goalId:String!): updateGoalResponse
-  deleteGoal(id: String): deleteGoalResponse
+  deleteGoal(goalId: String): deleteGoalResponse
 }

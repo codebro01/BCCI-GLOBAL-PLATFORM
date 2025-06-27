@@ -61,29 +61,49 @@ module.exports = {
       RBAC(user, ['ADMIN', 'USER'])
 
       const validatedGoalInputs = safeValidate(updateGoalSchema, goal)
-      const validateId = safeValidate(idSchema, {id:goalId})
+      const validateId = safeValidate(idSchema, { id: goalId })
       // console.log('passed zod', validatedInputs.errors)
-        if (validatedGoalInputs.errors) {
-          validatedGoalInputs.errors.map((error: ErrorObjectType) => {
+      if (validatedGoalInputs.errors) {
+        validatedGoalInputs.errors.map((error: ErrorObjectType) => {
+          throw new Error(error.message)
+        })
+        return
+      }
+      if (validateId.errors) {
+        if (validateId.errors) {
+          validateId.errors.map((error: ErrorObjectType) => {
             throw new Error(error.message)
           })
-          return;
         }
-        if (validateId.errors) {
-          if (validateId.errors) {
-            validateId.errors.map((error: ErrorObjectType) => {
-              throw new Error(error.message)
-            })
-          }
-          return
-        }
-      
+        return
+      }
 
       return GoalsServices.updateGoal(
         validatedGoalInputs.data,
         validateId.data.id,
         user
       )
+    },
+    deleteGoal: async (
+      _: unknown,
+      { goalId }: { goalId: string },
+      context: contextType
+    ) => {
+      const user = await authMiddleware(context)
+      RBAC(user, ['ADMIN', 'USER'])
+
+      const validateId = safeValidate(idSchema, { id: goalId })
+      // console.log('passed zod', validatedInputs.errors)
+      console.log(validateId)
+      if (validateId.errors) {
+        if (validateId.errors) {
+          validateId.errors.map((error: ErrorObjectType) => {
+            throw new Error(error.message)
+          })
+        }
+        return
+      }
+      return GoalsServices.deleteGoal(validateId.data.id, user)
     },
   },
 }

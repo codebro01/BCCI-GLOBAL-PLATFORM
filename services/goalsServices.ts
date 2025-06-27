@@ -111,6 +111,34 @@ class GoalsServices {
       }
     }
   }
+  async deleteGoal(goalId: string, user: Partial<User>) {
+    try {
+      console.log('goalId', goalId)
+      const goal = await Goal.findByIdAndDelete({_id: goalId})
+
+      console.log(goal)
+
+      if (!goal)
+        graphQLError(
+          'An error occured while deleting goal, please try again',
+          StatusCodes.INTERNAL_SERVER_ERROR
+        )
+      return {
+        deleteGoal:goal,
+        success: true,
+        message: 'Goal deleted!',
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        graphQLError(error.message, StatusCodes.INTERNAL_SERVER_ERROR)
+      } else {
+        graphQLError(
+          'An unexpected error occurred',
+          StatusCodes.INTERNAL_SERVER_ERROR
+        )
+      }
+    }
+  }
 }
 
 module.exports = new GoalsServices()
