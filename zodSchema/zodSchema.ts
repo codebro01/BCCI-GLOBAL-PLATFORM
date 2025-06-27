@@ -48,14 +48,29 @@ const updateUserSchema = z.object({
 export const goalSchema = z.object({
   title: z.string().trim().min(1, 'Title is required'),
   category: z.string().trim(),
-  target: z.string().trim(),
+  target: z.number(),
   timeFrame: z.string().trim(),
+  currentProgress: z.number().optional(),
+  description: z.string(),
 })
 export const updateGoalSchema = z.object({
   title: z.string().trim().min(1, 'Title is required').optional(),
   category: z.string().trim().optional(),
-  target: z.string().trim().optional(),
+  target: z.number().optional(),
   timeFrame: z.string().trim().optional(),
+  description: z.string().optional(),
+  currentProgress: z.number().optional(),
 })
 
-module.exports = { signUpSchema, loginSchema, updateUserSchema, goalSchema, updateGoalSchema }
+export const idSchema = z.object({
+  id: z.string()
+})
+
+module.exports = {
+  signUpSchema,
+  loginSchema,
+  updateUserSchema,
+  goalSchema,
+  updateGoalSchema,
+  idSchema,
+}

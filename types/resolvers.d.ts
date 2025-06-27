@@ -1,3 +1,5 @@
+import { Document } from 'mongoose'
+
 export type ID = string
 export type User = {
   id: ?ID
@@ -34,14 +36,18 @@ export type updateUserFields = Partial<{
   spiritualGoals: [string]
 }>
 
-export type GoalType = {
+export type Goal = {
   id: ?string
   user: ?User
   title: string
   category: string
-  target: string 
-  timeframe: string 
+  target: number
+  timeframe: string
+  description: string
+  currentProgress: number
 }
+
+export type GoalType = Goal & Document
 
 export type Cluster = {
   id: ID

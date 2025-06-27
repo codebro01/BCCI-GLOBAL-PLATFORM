@@ -1,6 +1,5 @@
-const {nanoid} = require('nanoid');
-const mongoose = require('mongoose');
-
+const { nanoid } = require('nanoid')
+const mongoose = require('mongoose')
 
 const goalSchema = new mongoose.Schema(
   {
@@ -12,6 +11,15 @@ const goalSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    currentProgress: {
+      type: Number,
+      default: 0,
+      required: true,
     },
     category: {
       type: String,
@@ -25,7 +33,7 @@ const goalSchema = new mongoose.Schema(
       ],
     },
     target: {
-      type: String, // could be numeric or more structured if needed
+      type: Number, // could be numeric or more structured if needed
       default: '',
     },
     timeFrame: {
