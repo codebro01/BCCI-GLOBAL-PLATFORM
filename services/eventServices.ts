@@ -1,31 +1,21 @@
+import { Console } from 'console'
 import type { contextType } from 'types/global'
-import type { GoalType } from 'types/resolvers'
+import type {  EventType } from 'types/resolvers'
 import type { User } from 'types/resolvers'
-const { Goal } = require('@models/Goals')
+const { EventSchema: Event } = require('@models/Event')
 const { graphQLError } = require('@helpers/errorHandler')
 const { StatusCodes } = require('http-status-codes')
 
-class GoalsServices {
-  async getGoals(user: Partial<User>) {
+class EventServices {
+  async getEvents(user: Partial<User>) {
     try {
-      // console.log(user, user.roles?.includes('ADMIN'))
-      let goals: GoalType[]
-      // if (user.roles?.includes('ADMIN')) {
-      //   goals = await Goal.find({}).populate('user')
-
-      //   return goals
-      // }
-      goals = await Goal.find({ user: user.id }).populate('user')
-      // console.log('goals', goals)
-      const calculateCurrentProgress = goals.map((goal) => {
-        // console.log(goal.target, goal.currentProgress)
-        const progress = (goal.currentProgress / goal.target) * 100
-
-        return { ...goal.toObject(), completionPercent: Math.round(progress), id:goal.id }
-      })
-
+      let event: EventType[]
+  
+    //   event = await Event.find({ user: user.id });
+      event = await Event.find({});
+      
       // console.log(calculateCurrentProgress)
-      return calculateCurrentProgress
+      return event;
     } catch (error: unknown) {
       if (error instanceof Error) {
         graphQLError(error.message, StatusCodes.INTERNAL_SERVER_ERROR)
@@ -38,28 +28,32 @@ class GoalsServices {
     }
   }
 
-  async getGoal(id: string) {
+  async getEvent(id: string) {
     console.log(id)
-    const goal = await Goal.findById({ _id: id })
-    console.log(goal)
-    if (!goal) graphQLError('Could not fetch goal, please try again!!!')
-    return goal
+    const event = await Event.findById({ _id: id })
+    console.log(event)
+    if (!event) graphQLError('Could not fetch event, please try again!!!')
+    return event
   }
 
-  async createGoal(goalInput: GoalType, user: Partial<User>) {
+  async createEvent(input: EventType, user: Partial<User>) {
     try {
       // await Goal.deleteMany()
-      const goal = new Goal({ ...goalInput, user: user.id })
-      await goal.save()
-      if (!goal)
+      console.log(input)
+      const event = new Event({ ...input, user: user.id })
+      await event.save()
+      if (!event)
         graphQLError(
-          'An error occured creating goals, please try again',
+          'An error occured creating events, please try again',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
+
+        console.log(event)
       return {
+        id: event.id,
         user: user.id,
         success: true,
-        message: 'Goal successfull added!',
+        message: 'Event successfull added!',
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -73,12 +67,12 @@ class GoalsServices {
     }
   }
 
-  async updateGoal(goalInput: GoalType, goalId: string, user: Partial<User>) {
+  async updateEvent(input: EventType, id: string, user: Partial<User>) {
     try {
-      const goal = await Goal.findByIdAndUpdate(
-        { _id: goalId },
+      const event = await Event.findByIdAndUpdate(
+        { _id: id },
         {
-          ...goalInput,
+          ...input,
           user: user.id,
         },
         {
@@ -87,18 +81,18 @@ class GoalsServices {
         }
       )
 
-      console.log(goal)
+      console.log(event)
 
-      if (!goal)
+      if (!event)
         graphQLError(
-          'An error occured updating goals, please try again',
+          'An error occured updating events, please try again',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
       return {
-        goal,
+        event,
         user: user.id,
         success: true,
-        message: 'Goal updated!',
+        message: 'Event updated!',
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -111,20 +105,23 @@ class GoalsServices {
       }
     }
   }
-  async deleteGoal(goalId: string, user: Partial<User>) {
+  async deleteEvent(id: string, user: Partial<User>) {
     try {
-      // console.log('goalId', goalId)
-      const goal = await Goal.findByIdAndDelete({_id: goalId})
-
-      console.log(goal)
-
-      if (!goal)
+        if (!id)
+          graphQLError(
+            'No event id provided',
+            StatusCodes.BAD_REQUEST
+          )
+      const event = await Event.findByIdAndDelete({_id: id})
+          console.log(event)
+          console.log('id', id)
+      if (!event)
         graphQLError(
-          'An error occured while deleting goal, please try again',
+          'Unknown id for selected event!',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
       return {
-        deleteGoal:goal,
+        deleteEvent:event,
         success: true,
         message: 'Goal deleted!',
       }
@@ -141,4 +138,4 @@ class GoalsServices {
   }
 }
 
-module.exports = new GoalsServices()
+module.exports = new EventServices()

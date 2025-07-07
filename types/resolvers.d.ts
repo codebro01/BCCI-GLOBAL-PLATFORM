@@ -74,3 +74,13 @@ export type Contribution = {
   amount: number
   remark: string
 }
+
+export type EventStatus = 'PENDING' | 'CONFIRMED';
+
+export interface EventType {
+  id?: string;
+  title: string;
+  date: string;   // ISO date string e.g. "2025-07-15"
+  time: string;   // 24hr format e.g. "14:30"
+  status: EventStatus
+}

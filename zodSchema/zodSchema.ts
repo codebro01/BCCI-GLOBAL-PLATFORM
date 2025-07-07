@@ -66,6 +66,38 @@ export const idSchema = z.object({
   id: z.string()
 })
 
+export const EventStatusEnum = z.enum(['PENDING', 'CONFIRMED']);
+
+
+export const createEventSchema = z.object({
+  title: z.string().min(1, 'Event title is required'),
+  date: z
+    .string()
+    .refine((val) => !isNaN(Date.parse(val)), {
+      message: 'Invalid date format',
+    }),
+  time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+    message: 'Invalid time format (HH:mm expected)',
+  }),
+  status: EventStatusEnum.optional().default('PENDING'),
+})
+
+export const updateEventSchema = z.object({
+  title: z.string().min(1).optional(),
+  date: z
+    .string()
+    .refine((val) => !isNaN(Date.parse(val)), {
+      message: 'Invalid date format',
+    })
+    .optional(),
+  time: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .optional(),
+  status: EventStatusEnum.optional(),
+})
+
+
 module.exports = {
   signUpSchema,
   loginSchema,
@@ -73,4 +105,8 @@ module.exports = {
   goalSchema,
   updateGoalSchema,
   idSchema,
+  createEventSchema, 
+  updateEventSchema,
+  EventStatusEnum
+
 }
