@@ -77,4 +77,4 @@ module.exports = {
         },
     },
 };
-//# sourceMappingURL=goal.resolver.js.map
+//# sourceMappingURL=Goal.resolver.js.map
