@@ -21,7 +21,7 @@
     "@models/*": ["models/*"],
     "@db/*": ["db/*"],
   },
-    "outDir": "dist",
+    "outDir": "./dist",
     "rootDir": "./",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

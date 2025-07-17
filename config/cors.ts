@@ -1,6 +1,10 @@
 import type { CorsOptionsDelegate, CorsRequest } from 'cors'
 
-const allowedOrigins = ['http://localhost:4000', 'https://yourdomain.com']
+const allowedOrigins = [
+  'https://studio.apollographql.com',
+  'http://localhost:4000',
+  'https://yourdomain.com',
+]
 
 export const corsOptionsDelegate: CorsOptionsDelegate<CorsRequest> = (
   req,
