@@ -1,0 +1,12 @@
+type SpiritualCV {
+  id: ID!
+  user: User!
+  eventsAttended: [Event]
+  rolesHeld: [String]
+  testimonies: [String]
+  trainingsCompleted: [String]
+}
+
+type Query {
+  hello: String!
+}

@@ -1,0 +1,10 @@
+type PrayerRequest {
+  id: ID!
+  user: User!
+  request: String!
+  submittedAt: String!
+}
+
+type Query {
+  hello: String!
+}

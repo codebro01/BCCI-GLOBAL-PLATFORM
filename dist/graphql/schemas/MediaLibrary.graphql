@@ -1,0 +1,12 @@
+type Media {
+  id: ID!
+  title: String!
+  type: String!
+  url: String!
+  category: String
+  dateUploaded: String!
+}
+
+type Query {
+  hello: String!
+}

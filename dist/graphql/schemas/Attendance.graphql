@@ -1,0 +1,10 @@
+type Attendance {
+  id: ID!
+  user: User!
+  date: String!
+  status: String!
+}
+
+type Query {
+  hello: String!
+}

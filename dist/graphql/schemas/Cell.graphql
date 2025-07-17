@@ -1,0 +1,12 @@
+type Cell {
+  id: ID!
+  name: String!
+  cluster: Cluster!
+  members: [User]
+  leader: User
+  announcements: [String]
+}
+
+type Query {
+  hello: String!
+}

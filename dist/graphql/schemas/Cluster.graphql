@@ -1,0 +1,13 @@
+type Cluster {
+  id: ID!
+  name: String!
+  country: String!
+  state: String!
+  city: String!
+  leader: User
+  cells: [Cell]
+}
+
+type Query {
+  hello: String!
+}

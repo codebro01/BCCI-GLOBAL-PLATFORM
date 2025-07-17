@@ -1,0 +1,11 @@
+type Gamification {
+  id: ID!
+  user: User!
+  points: Int!
+  badges: [String]
+  certificates: [String]
+}
+
+type Query {
+  hello: String!
+}

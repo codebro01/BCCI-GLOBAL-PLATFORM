@@ -1,0 +1,15 @@
+type LearningPath {
+  id: ID!
+  name: String!
+  stages: [LearningStage]
+}
+
+type LearningStage {
+  title: String!
+  description: String!
+  isComplete: Boolean!
+}
+
+type Query {
+  hello: String!
+}
