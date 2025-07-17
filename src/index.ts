@@ -13,8 +13,8 @@ const { mergeResolvers } = require('@graphql-tools/merge')
 const { mergeTypeDefs } = require('@graphql-tools/merge')
 const { loadFilesSync } = require('@graphql-tools/load-files')
 
-// !middlewares  
-const {authMiddleware} = require('@middlewares/authMiddleware')
+// !middlewares
+const { authMiddleware } = require('@middlewares/authMiddleware')
 
 // ! helpers
 
@@ -44,6 +44,10 @@ app.use(express.json())
 
 const PORT = process.env.PORT || 4000
 
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hello from BCCI!')
+})
+
 const schemaPath = join(__dirname, '..', 'graphql', 'schemas', '*.graphql')
 const typeDefs = mergeTypeDefs(loadFilesSync(schemaPath))
 
@@ -52,6 +56,8 @@ const startServer = async () => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    introspection: true, // make schema browsable
+    playground: true, // enable the GraphQL Playground UI
     formatError: (err: GraphQLError) => {
       const originalError = err.originalError as any
 
@@ -73,7 +79,6 @@ const startServer = async () => {
     },
   })
   await server.start()
-
 
   app.use(
     '/graphql',
