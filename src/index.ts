@@ -1,5 +1,6 @@
 require('dotenv').config()
 require('express-async-errors')
+import 'module-alias/register'
 import type { Request, Response } from 'express'
 const express = require('express')
 const { ApolloServer } = require('@apollo/server')
