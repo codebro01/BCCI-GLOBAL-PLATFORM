@@ -9,3 +9,7 @@ const eventResolver = require('@graphql/resolvers/Event.resolver')
 const resolvers = [userResolver, authResolver, goalResolver, eventResolver]
 
 module.exports = mergeResolvers(resolvers)
+
+
+
+
