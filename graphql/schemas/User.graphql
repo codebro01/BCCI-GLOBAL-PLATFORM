@@ -17,6 +17,8 @@ type User {
   spiritualGoals: [String]
 }
 
+
+
 type LoginResponse {
   message: String
 }

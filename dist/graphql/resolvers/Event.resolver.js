@@ -38,7 +38,7 @@ module.exports = {
             }
             return EventServices.createEvent(validatedInputs.data, user);
         },
-        updateGoal: async (_, { input, id }, context) => {
+        updateEvent: async (_, { input, id }, context) => {
             const user = await authMiddleware(context);
             RBAC(user, ['ADMIN', 'USER']);
             const validatedGoalInputs = safeValidate(updateEventSchema, input);

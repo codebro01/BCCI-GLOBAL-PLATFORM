@@ -35,9 +35,10 @@ app.use(cookieParser())
 // app.use(cors(corsOptionsDelegate))
 app.use(
   cors({
-    origin: ['http://localhost:4000', 'http://127.0.0.1:5500'], // or whatever your frontend is
+    origin: ['http://localhost:4000', 'http://127.0.0.1:5500'],
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS'],
+    exposedHeaders: ['x-access-token', 'x-refresh-token'],
   })
 )
 

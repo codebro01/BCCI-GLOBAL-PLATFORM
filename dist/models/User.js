@@ -24,7 +24,7 @@ const userSchema = new mongoose_1.Schema({
     phone: String,
     password: {
         type: String,
-        required: true
+        required: true,
     },
     roles: {
         type: Array,
@@ -58,7 +58,7 @@ const userSchema = new mongoose_1.Schema({
     serviceCV: { type: mongoose_1.Types.ObjectId, ref: 'SpiritualCV' },
     refreshToken: {
         type: String,
-    }
+    },
 }, { timestamps: true });
 userSchema.pre('save', async function () {
     if (this.isModified('password')) {

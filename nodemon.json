@@ -1,6 +1,6 @@
 {
-  "watch": ["src"],
-  "ext": "ts,tsx",
+  "watch": ["./"],
+  "ext": "ts,tsx,graphql,json",
   "ignore": ["node_modules", "dist", "*.test.ts", "*.spec.ts"],
   "exec": "ts-node-dev --respawn --transpile-only --require tsconfig-paths/register src/index.ts",
   "legacyWatch": true

@@ -1,0 +1,17 @@
+{
+  "_moduleAliases": {
+    "@controller": "dist/controller",
+    "@model": "dist/model",
+    "@utils": "dist/utils",
+    "@config": "dist/config",
+    "@types": "dist/types",
+    "@middlewares": "dist/middlewares",
+    "@routes": "dist/routes",
+    "@services": "dist/services",
+    "@helpers": "dist/helpers",
+    "@graphql": "dist/graphql",
+    "@zodSchema": "dist/zodSchema",
+    "@models": "dist/models",
+    "@db": "dist/db"
+  }
+}

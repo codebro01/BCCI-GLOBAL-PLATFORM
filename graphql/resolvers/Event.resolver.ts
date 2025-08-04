@@ -54,7 +54,7 @@ module.exports = {
 
       return EventServices.createEvent(validatedInputs.data, user)
     },
-    updateGoal: async (
+    updateEvent: async (
       _: unknown,
       { input, id }: { input: EventType; id: string },
       context: contextType

@@ -50,7 +50,7 @@ const sendAccessTokenCookie = (context: contextType, user: tokenUserType) => {
   return accessToken
 }
 const sendRefreshTokenCookie = (context: contextType, user: tokenUserType) => {
-  const refreshToken = generateAccessToken(
+  const refreshToken = generateRefreshToken(
     user,
     process.env.REFRESH_TOKEN_SECRET
   )
@@ -59,7 +59,7 @@ const sendRefreshTokenCookie = (context: contextType, user: tokenUserType) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    maxAge: 1000 * 60 * 60 * 24 * 5, // 15 MINUETES
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   })
 
   return refreshToken

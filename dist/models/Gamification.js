@@ -5,7 +5,7 @@ const gamificationSchema = new mongoose_1.Schema({
     userId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User' },
     points: Number,
     earnedBadges: [String],
-    unlockedFeatures: [String]
+    unlockedFeatures: [String],
 }, { timestamps: true });
 exports.default = (0, mongoose_1.model)('Gamification', gamificationSchema);
 //# sourceMappingURL=Gamification.js.map

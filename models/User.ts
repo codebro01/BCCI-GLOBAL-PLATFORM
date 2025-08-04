@@ -1,6 +1,6 @@
-import { Schema, model, Types } from 'mongoose';
-const bcryptjs = require('bcryptjs');
-const {nanoid} = require('nanoid');
+import { Schema, model, Types } from 'mongoose'
+const bcryptjs = require('bcryptjs')
+const { nanoid } = require('nanoid')
 
 const userSchema = new Schema(
   {
@@ -23,8 +23,8 @@ const userSchema = new Schema(
     email: { type: String, unique: true },
     phone: String,
     password: {
-      type: String, 
-      required: true
+      type: String,
+      required: true,
     },
     roles: {
       type: Array,
@@ -57,19 +57,18 @@ const userSchema = new Schema(
     badges: [String],
     serviceCV: { type: Types.ObjectId, ref: 'SpiritualCV' },
     refreshToken: {
-      type: String, 
-    }
+      type: String,
+    },
   },
   { timestamps: true }
 )
 
-
-userSchema.pre('save', async function() {
+userSchema.pre('save', async function () {
   if (this.isModified('password')) {
     const salt = await bcryptjs.genSalt(10)
     this.password = await bcryptjs.hash(this.password, salt)
   }
-  if(this.isModified('refreshToken')) {
+  if (this.isModified('refreshToken')) {
     const salt = await bcryptjs.genSalt(10)
     this.refreshToken = await bcryptjs.hash(this.refreshToken, salt)
   }
@@ -80,10 +79,10 @@ userSchema.methods.comparePwd = async function (userPwd: string) {
   return compare
 }
 userSchema.methods.compareRefreshToken = async function (refreshToken: string) {
-  const compare = bcryptjs.compare(refreshToken, this.refreshToken);
+  const compare = bcryptjs.compare(refreshToken, this.refreshToken)
   return compare
 }
 
-const User =  model('User', userSchema);
+const User = model('User', userSchema)
 
-module.exports = {User}
+module.exports = { User }

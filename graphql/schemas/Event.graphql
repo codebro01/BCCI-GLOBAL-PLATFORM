@@ -39,13 +39,13 @@ type createEventResponse {
 }
 type updateEventResponse {
   user: ID
-  goal: Goal
+  event: Event
   success: Boolean!
   message: String!
 }
 
 type deleteEventResponse {
-  deletedGoal: Goal
+  deletedEvent: Event
   success: Boolean!
   message: String!
 }

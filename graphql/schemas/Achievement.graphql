@@ -1,0 +1,72 @@
+type MinistryInvolvement {
+    id: ID!
+    user: User
+ startDate: String!
+  endDate: String   
+   achievement: String
+  role: [MinistryRoleType!]
+}
+
+enum MinistryRoleType {
+  YOUTH_MINISTRY_LEADER
+  WORSHIP_TEAM_MEMBER
+  CELL_GROUP_MEMBER
+  USHER
+  MEDIA_TEAM
+  TECH_SUPPORT
+#   MEMBER
+  OTHER
+}
+
+type createMinistryInvolvementResponse {
+  user: ID
+  id: ID
+  success: Boolean!
+  message: String!
+  achievement: String
+}
+type updateMinistryInvolvementResponse {
+  message: String!
+  user: ID
+  id: ID
+  success: Boolean!
+  achievement: String
+}
+
+type deleteAchievementResponse {
+  user: ID
+  id: ID
+  success: Boolean!
+  message: String!
+  achievement: String
+}
+
+type Query {
+    ministryInvolvement(id: ID!): MinistryInvolvement
+    ministryInvolvements: [MinistryInvolvement!]
+}
+input createMinistryInvolvement {
+id: ID!
+  role: MinistryRoleType!
+  achievements: [String!]!
+  startDate: String!
+  endDate: String
+}
+input updateMinistryInvolvement {
+id: ID!
+  role: MinistryRoleType!
+  achievements: [String!]!
+  startDate: String!
+  endDate: String
+}
+
+type Query {
+    ministryInvolvement(id: ID!): MinistryInvolvement!
+    
+}
+
+type Mutation {
+    createAchievement: String
+    updateAchievement:String
+    
+}

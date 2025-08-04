@@ -30,19 +30,19 @@ const sendAccessTokenCookie = (context, user) => {
     const accessToken = generateAccessToken(user, process.env.ACCESS_TOKEN_SECRET);
     context.res.cookie('access_token', accessToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'lax',
+        secure: true,
+        sameSite: 'none',
         maxAge: 1000 * 60 * 15, // 15 MINUETES
     });
     return accessToken;
 };
 const sendRefreshTokenCookie = (context, user) => {
-    const refreshToken = generateAccessToken(user, process.env.REFRESH_TOKEN_SECRET);
+    const refreshToken = generateRefreshToken(user, process.env.REFRESH_TOKEN_SECRET);
     context.res.cookie('refresh_token', refreshToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'lax',
-        maxAge: 1000 * 60 * 60 * 24 * 5, // 15 MINUETES
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
     return refreshToken;
 };
@@ -56,6 +56,6 @@ module.exports = {
     verifyJWT,
     generateAccessToken,
     generateRefreshToken,
-    logout
+    logout,
 };
 //# sourceMappingURL=jwt.js.map

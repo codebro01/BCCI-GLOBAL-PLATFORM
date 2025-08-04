@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { User } = require('@models/User');
 const { graphQLError } = require('@helpers/errorHandler');
 const { createTokenUser } = require('@helpers/createTokenUser');
-const { sendAccessTokenCookie, sendRefreshTokenCookie } = require('@helpers/jwt');
+const { sendAccessTokenCookie, generateAccessToken, generateRefreshToken, sendRefreshTokenCookie, } = require('@helpers/jwt');
 const { StatusCodes } = require('http-status-codes');
+const detectPlatform = require('@helpers/detectPlatform');
 class AuthServices {
     async createUser(context, userData) {
         // await User.deleteMany()
@@ -14,8 +15,17 @@ class AuthServices {
         const user = new User({ ...userData });
         await user.save();
         const tokenUser = createTokenUser(user);
-        sendAccessTokenCookie(context, tokenUser);
-        sendRefreshTokenCookie(context, tokenUser);
+        const platform = detectPlatform(context.req);
+        if (platform === 'web') {
+            sendAccessTokenCookie(context, tokenUser);
+            sendRefreshTokenCookie(context, tokenUser);
+        }
+        if (platform === 'mobile') {
+            const accessToken = generateAccessToken(tokenUser, process.env.ACCESS_TOKEN_SECRET);
+            const refreshToken = generateRefreshToken(tokenUser, process.env.REFRESH_TOKEN_SECRET);
+            context.res.setHeader('x-access-token', accessToken);
+            context.res.setHeader('x-refresh-token', refreshToken);
+        }
         return user;
     }
     async loginUser(context, userData) {

@@ -8,32 +8,43 @@ import type { contextType, RoleType } from 'types/global'
 import type { tokenUserType } from 'types/jwt_tokenUser'
 
 const authMiddleware = async (context: contextType) => {
-  const { access_token, refresh_token } = context.req.cookies
 
+  // console.log(context.req.headers)
+  // console.log('entered auth middleware func')
+  const access_token =
+    context.req.cookies.access_token || context.req.headers['x-access-token']
+  const refresh_token =
+    context.req.cookies.refresh_token || context.req.headers['x-refresh-token']
+  // console.log(access_token, refresh_token)
   let decodedAccessToken
   let decodedRefreshToken
   // console.log('access_token', access_token)
   // console.log('refresh_token', refresh_token)
   // Try access token first
   try {
+    // console.log('entered first if')
+
     if (access_token) {
       decodedAccessToken = verifyJWT(access_token, {
         tokenSecret: process.env.ACCESS_TOKEN_SECRET,
       })
-
     }
   } catch (err) {
     console.log(err)
     // Access token is invalid/expired – do nothing for now
   }
+
+  // console.log('refresh_token_secret', context.req.cookies)
   // If access token failed, try refresh token
   if (!decodedAccessToken && refresh_token) {
+    // console.log('entered second if')
     try {
       decodedRefreshToken = verifyJWT(refresh_token, {
         tokenSecret: process.env.REFRESH_TOKEN_SECRET,
       })
-      console.log('decodedRefreshToken', decodedRefreshToken);
-      if(!decodedRefreshToken) graphQLError('Invalid User', StatusCodes.UNAUTHORIZED)
+      // console.log('decodedRefreshToken', decodedRefreshToken)
+      if (!decodedRefreshToken)
+        graphQLError('Invalid User', StatusCodes.UNAUTHORIZED)
       const { email, id, firstName, surname, otherNames, roles } =
         decodedRefreshToken
       const newAccessTokenPayload = {
@@ -46,12 +57,27 @@ const authMiddleware = async (context: contextType) => {
       }
       if (decodedRefreshToken) {
         const user = await User.findOne({ _id: id })
+        // console.log('user is available', user)
         if (!user) graphQLError('Invalid User', StatusCodes.UNAUTHORIZED)
-        const validRefreshToken = user.compareRefreshToken(refresh_token)
+        const validRefreshToken = await user.compareRefreshToken(refresh_token)
+        // console.log('valid refresh token', validRefreshToken)
+
         if (!validRefreshToken)
           graphQLError('Token Mismatch', StatusCodes.BAD_REQUEST)
         sendAccessTokenCookie(context, newAccessTokenPayload)
-        decodedAccessToken = decodedRefreshToken // treat it as fresh session
+
+        // console.log('newlySentAccessToken', newlySentAccessToken)
+        decodedAccessToken = {
+          email,
+          id,
+          firstName,
+          surname,
+          otherNames,
+          roles,
+        }
+        // console.log('decodedAccessToken', decodedAccessToken)
+
+        // decodedAccessToken = newAccessTokenPayload // treat it as fresh session
       }
     } catch (err) {
       // Refresh token also invalid
@@ -64,10 +90,13 @@ const authMiddleware = async (context: contextType) => {
 
   // Final checks
   if (!access_token && !refresh_token) {
-    graphQLError('No token or invalid token provided', StatusCodes.NOT_FOUND)
+    graphQLError(
+      'No token or invalid token provided, please login again',
+      StatusCodes.NOT_FOUND
+    )
   }
 
-  if (!decodedAccessToken) {
+  if (!decodedAccessToken && !decodedRefreshToken) {
     graphQLError('Invalid or expired token', StatusCodes.UNAUTHORIZED)
   }
 
@@ -76,6 +105,7 @@ const authMiddleware = async (context: contextType) => {
 
 const RBAC = (user: tokenUserType, requiredRole: RoleType) => {
   // console.log(user.roles, requiredRole)
+  // console.log(user)
   if (!user || !user.roles || user.roles.length < 1) {
     graphQLError(
       'User is not permitted to enter here!!!!!',

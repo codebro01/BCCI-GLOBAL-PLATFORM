@@ -1,6 +1,6 @@
 import { Console } from 'console'
 import type { contextType } from 'types/global'
-import type {  EventType } from 'types/resolvers'
+import type { EventType } from 'types/resolvers'
 import type { User } from 'types/resolvers'
 const { EventSchema: Event } = require('@models/Event')
 const { graphQLError } = require('@helpers/errorHandler')
@@ -10,12 +10,12 @@ class EventServices {
   async getEvents(user: Partial<User>) {
     try {
       let event: EventType[]
-  
-    //   event = await Event.find({ user: user.id });
-      event = await Event.find({});
-      
+
+      //   event = await Event.find({ user: user.id });
+      event = await Event.find({})
+
       // console.log(calculateCurrentProgress)
-      return event;
+      return event
     } catch (error: unknown) {
       if (error instanceof Error) {
         graphQLError(error.message, StatusCodes.INTERNAL_SERVER_ERROR)
@@ -29,17 +29,18 @@ class EventServices {
   }
 
   async getEvent(id: string) {
-    console.log(id)
+    // console.log(id)
     const event = await Event.findById({ _id: id })
-    console.log(event)
-    if (!event) graphQLError('Could not fetch event, please try again!!!')
+    // console.log(event)
+    if (!event)
+      graphQLError(`There is not event with id ${id}, please try again!!!`)
     return event
   }
 
   async createEvent(input: EventType, user: Partial<User>) {
     try {
       // await Goal.deleteMany()
-      console.log(input)
+      // console.log(input)
       const event = new Event({ ...input, user: user.id })
       await event.save()
       if (!event)
@@ -48,7 +49,7 @@ class EventServices {
           StatusCodes.INTERNAL_SERVER_ERROR
         )
 
-        console.log(event)
+      // console.log(event)
       return {
         id: event.id,
         user: user.id,
@@ -68,6 +69,7 @@ class EventServices {
   }
 
   async updateEvent(input: EventType, id: string, user: Partial<User>) {
+    // console.log('entered update event')
     try {
       const event = await Event.findByIdAndUpdate(
         { _id: id },
@@ -81,13 +83,13 @@ class EventServices {
         }
       )
 
-      console.log(event)
-
       if (!event)
         graphQLError(
           'An error occured updating events, please try again',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
+
+      // console.log('event', event)
       return {
         event,
         user: user.id,
@@ -107,21 +109,17 @@ class EventServices {
   }
   async deleteEvent(id: string, user: Partial<User>) {
     try {
-        if (!id)
-          graphQLError(
-            'No event id provided',
-            StatusCodes.BAD_REQUEST
-          )
-      const event = await Event.findByIdAndDelete({_id: id})
-          console.log(event)
-          console.log('id', id)
+      if (!id) graphQLError('No event id provided', StatusCodes.BAD_REQUEST)
+      const event = await Event.findByIdAndDelete({ _id: id })
+      // console.log(event)
+      // console.log('id', id)
       if (!event)
         graphQLError(
           'Unknown id for selected event!',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
       return {
-        deleteEvent:event,
+        deleteEvent: event,
         success: true,
         message: 'Goal deleted!',
       }

@@ -1,8 +1,14 @@
 const { User } = require('@models/User')
 const { graphQLError } = require('@helpers/errorHandler')
 const { createTokenUser } = require('@helpers/createTokenUser')
-const { sendAccessTokenCookie, sendRefreshTokenCookie } = require('@helpers/jwt')
+const {
+  sendAccessTokenCookie,
+  generateAccessToken,
+  generateRefreshToken,
+  sendRefreshTokenCookie,
+} = require('@helpers/jwt')
 const { StatusCodes } = require('http-status-codes')
+const detectPlatform = require('@helpers/detectPlatform')
 import type { User as UserType } from 'types/resolvers'
 import type { contextType } from 'types/global'
 
@@ -21,8 +27,24 @@ class AuthServices {
     await user.save()
     const tokenUser = createTokenUser(user)
 
-    sendAccessTokenCookie(context, tokenUser)
-    sendRefreshTokenCookie(context, tokenUser)
+    const platform = detectPlatform(context.req)
+    // console.log(platform)
+    if (platform === 'web') {
+      sendAccessTokenCookie(context, tokenUser)
+      sendRefreshTokenCookie(context, tokenUser)
+    }
+    if (platform === 'mobile') {
+      const accessToken = generateAccessToken(
+        tokenUser,
+        process.env.ACCESS_TOKEN_SECRET
+      )
+      const refreshToken = generateRefreshToken(
+        tokenUser,
+        process.env.REFRESH_TOKEN_SECRET
+      )
+      context.res.setHeader('x-access-token', accessToken)
+      context.res.setHeader('x-refresh-token', refreshToken)
+    }
 
     return user
   }
@@ -38,15 +60,35 @@ class AuthServices {
     const passwordCorrect = await user.comparePwd(userData.password)
     // console.log(passwordCorrect, 'check password')
     if (!passwordCorrect)
-    return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND)
+      return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND)
     const tokenUser = createTokenUser(user)
-    sendAccessTokenCookie(context, tokenUser);
-    const refreshToken = sendRefreshTokenCookie(context, tokenUser)
 
-    // console.log('refresh_token', refreshToken)
+    const platform = detectPlatform(context.req)
+    // console.log('platform', platform)
+    if (platform === 'web') {
+      sendAccessTokenCookie(context, tokenUser)
+      const refreshToken = sendRefreshTokenCookie(context, tokenUser)
+      user.refreshToken = refreshToken
+      await user.save()
+    }
+    if (platform === 'mobile') {
 
-    user.refreshToken = refreshToken
-    await user.save()
+      const accessToken = generateAccessToken(
+        tokenUser,
+        process.env.ACCESS_TOKEN_SECRET
+      )
+      const refreshToken = generateRefreshToken(
+        tokenUser,
+        process.env.REFRESH_TOKEN_SECRET
+      )
+      context.res.setHeader('x-access-token', accessToken)
+      context.res.setHeader('x-refresh-token', refreshToken)
+      user.refreshToken = refreshToken
+
+      await user.save()
+    }
+
+// console.log(context.res.getHeaders())
 
     return { message: 'Login Succesfull!!! 🚀' }
   }

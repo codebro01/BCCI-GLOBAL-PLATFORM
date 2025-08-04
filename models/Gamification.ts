@@ -1,10 +1,13 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
-const gamificationSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  points: Number,
-  earnedBadges: [String],
-  unlockedFeatures: [String]
-}, { timestamps: true });
+const gamificationSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    points: Number,
+    earnedBadges: [String],
+    unlockedFeatures: [String],
+  },
+  { timestamps: true }
+)
 
-export default model('Gamification', gamificationSchema);
+export default model('Gamification', gamificationSchema)

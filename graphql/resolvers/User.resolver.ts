@@ -17,7 +17,9 @@ const UserServices = require('@services/userServices')
 module.exports = {
   Query: {
     users: async (_: unknown, {}, context: contextType) => {
-      const user = await authMiddleware(context)
+      console.log('entered the resolver')
+      const user = await authMiddleware(context);
+      // console.log('user from resolver', user)
       RBAC(user, ['ADMIN'])
       return UserServices.getUsers()
     },
@@ -28,14 +30,15 @@ module.exports = {
     },
   },
   Mutation: {
-    updateUser: (
+    updateUser: async (
       _: unknown,
       { user }: { user: User },
       context: contextType
     ) => {
       const validatedInputs = safeValidate(updateUserSchema, user)
 
-      const resUser = authMiddleware(context)
+      const resUser = await authMiddleware(context)
+      console.log('resUser', resUser)
       if (!validatedInputs.success) {
         validatedInputs.errors.map((error: ErrorObjectType) => {
           throw new Error(error.message)
@@ -44,20 +47,20 @@ module.exports = {
       }
       return UserServices.updateUser(resUser, user)
     },
-    deleteUser: (_: unknown, { id }: { id: string }, context: contextType) => {
-      const user = authMiddleware(context)
+    deleteUser: async (_: unknown, { id }: { id: string }, context: contextType) => {
+      const user = await authMiddleware(context)
       RBAC(user, ['ADMIN'])
       /* ... */
       return UserServices.deleteUser(id)
     },
-    updateUserPassword: (
+    updateUserPassword:async (
       _: unknown,
       {
         passwordData,
       }: { passwordData: { newPassword: string; oldPassword: string } },
       context: contextType
     ) => {
-      const user = authMiddleware(context)
+      const user = await authMiddleware(context)
       /* ... */
       return UserServices.updateUserPassword(user, passwordData)
     },

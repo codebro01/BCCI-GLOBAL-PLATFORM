@@ -32,9 +32,9 @@ class GoalsServices {
         }
     }
     async getGoal(id) {
-        console.log(id);
+        // console.log(id)
         const goal = await Goal.findById({ _id: id });
-        console.log(goal);
+        // console.log(goal)
         if (!goal)
             graphQLError('Could not fetch goal, please try again!!!');
         return goal;
@@ -70,7 +70,7 @@ class GoalsServices {
                 new: true,
                 runValidators: true,
             });
-            console.log(goal);
+            // console.log(goal)
             if (!goal)
                 graphQLError('An error occured updating goals, please try again', StatusCodes.INTERNAL_SERVER_ERROR);
             return {
@@ -93,7 +93,7 @@ class GoalsServices {
         try {
             // console.log('goalId', goalId)
             const goal = await Goal.findByIdAndDelete({ _id: goalId });
-            console.log(goal);
+            // console.log(goal)
             if (!goal)
                 graphQLError('An error occured while deleting goal, please try again', StatusCodes.INTERNAL_SERVER_ERROR);
             return {

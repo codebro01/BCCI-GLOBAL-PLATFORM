@@ -7,7 +7,9 @@ const UserServices = require('@services/userServices');
 module.exports = {
     Query: {
         users: async (_, {}, context) => {
+            console.log('entered the resolver');
             const user = await authMiddleware(context);
+            // console.log('user from resolver', user)
             RBAC(user, ['ADMIN']);
             return UserServices.getUsers();
         },
@@ -18,9 +20,10 @@ module.exports = {
         },
     },
     Mutation: {
-        updateUser: (_, { user }, context) => {
+        updateUser: async (_, { user }, context) => {
             const validatedInputs = safeValidate(updateUserSchema, user);
-            const resUser = authMiddleware(context);
+            const resUser = await authMiddleware(context);
+            console.log('resUser', resUser);
             if (!validatedInputs.success) {
                 validatedInputs.errors.map((error) => {
                     throw new Error(error.message);
@@ -29,14 +32,14 @@ module.exports = {
             }
             return UserServices.updateUser(resUser, user);
         },
-        deleteUser: (_, { id }, context) => {
-            const user = authMiddleware(context);
+        deleteUser: async (_, { id }, context) => {
+            const user = await authMiddleware(context);
             RBAC(user, ['ADMIN']);
             /* ... */
             return UserServices.deleteUser(id);
         },
-        updateUserPassword: (_, { passwordData, }, context) => {
-            const user = authMiddleware(context);
+        updateUserPassword: async (_, { passwordData, }, context) => {
+            const user = await authMiddleware(context);
             /* ... */
             return UserServices.updateUserPassword(user, passwordData);
         },

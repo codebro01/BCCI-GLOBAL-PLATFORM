@@ -39,9 +39,9 @@ class GoalsServices {
   }
 
   async getGoal(id: string) {
-    console.log(id)
+    // console.log(id)
     const goal = await Goal.findById({ _id: id })
-    console.log(goal)
+    // console.log(goal)
     if (!goal) graphQLError('Could not fetch goal, please try again!!!')
     return goal
   }
@@ -87,7 +87,7 @@ class GoalsServices {
         }
       )
 
-      console.log(goal)
+      // console.log(goal)
 
       if (!goal)
         graphQLError(
@@ -116,7 +116,7 @@ class GoalsServices {
       // console.log('goalId', goalId)
       const goal = await Goal.findByIdAndDelete({_id: goalId})
 
-      console.log(goal)
+      // console.log(goal)
 
       if (!goal)
         graphQLError(
