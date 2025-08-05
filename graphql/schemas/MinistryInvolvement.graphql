@@ -1,3 +1,6 @@
+
+# !.............Types & Enums ..........................
+
 type MinistryInvolvement {
     id: ID!
     user: User
@@ -19,8 +22,8 @@ enum MinistryRoleType {
 }
 
 type createMinistryInvolvementResponse {
+  id: String
   user: ID
-  id: ID
   success: Boolean!
   message: String!
   achievement: String
@@ -28,12 +31,13 @@ type createMinistryInvolvementResponse {
 type updateMinistryInvolvementResponse {
   message: String!
   user: ID
-  id: ID
+  id: String
   success: Boolean!
   achievement: String
 }
 
-type deleteAchievementResponse {
+
+type deleteMinistryInvolvementResponse {
   user: ID
   id: ID
   success: Boolean!
@@ -60,13 +64,19 @@ id: ID!
   endDate: String
 }
 
+# !.............Query ..........................
+
 type Query {
     ministryInvolvement(id: ID!): MinistryInvolvement!
+    ministryInvolvements: [MinistryInvolvement]
     
 }
 
+# !.............Mutations ..........................
+
+
 type Mutation {
-    createAchievement: String
-    updateAchievement:String
-    
+    createAchievement(input: createMinistryInvolvement!): createMinistryInvolvementResponse!
+    updateAchievement(input: updateMinistryInvolvement!): updateMinistryInvolvementResponse!
+    deleteMinistryInvolvement(input: ID!): deleteMinistryInvolvementResponse!
 }
