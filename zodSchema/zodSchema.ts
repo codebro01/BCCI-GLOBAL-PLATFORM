@@ -98,6 +98,41 @@ export const updateEventSchema = z.object({
 })
 
 
+export const communicationToolsSchema = z.object({
+  chatId: z.string().optional(),
+  announcementBoardId: z.string().optional(),
+})
+
+export const cellSchema = z.object({
+  cellName: z.string().optional(),
+  cellType: z.string().optional(),
+  meetingLocation: z.string().optional(),
+  meetingTime: z.string().optional(),
+  cluster: z
+    .string()
+    .optional(), // ObjectId as string
+  membershipTarget: z.number().optional(),
+  monthlyBudget: z.number().optional(),
+  cellLeader: z.string().optional(),
+  members: z.array(z.string()).optional(),
+  maxCapacity: z.number().optional().default(10),
+  communicationTools: communicationToolsSchema.optional(),
+  location: z.string().optional(),
+})
+
+export const clusterSchema = z.object({
+  clusterName: z.string().optional(),
+  region: z.string().optional(),
+  state: z.string().optional(),
+  membershipTarget: z.string().optional(),
+  cellTarget: z.string().optional(),
+  country: z.string().optional(),
+  clusterLeader: z.string().optional(),
+  cells: z.array(z.string()).optional(),
+  description: z.string().optional(),
+})
+
+
 module.exports = {
   signUpSchema,
   loginSchema,
@@ -107,6 +142,7 @@ module.exports = {
   idSchema,
   createEventSchema, 
   updateEventSchema,
-  EventStatusEnum
-
+  EventStatusEnum, 
+  cellSchema, 
+  clusterSchema, 
 }

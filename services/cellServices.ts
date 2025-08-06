@@ -1,21 +1,19 @@
-import { Console } from 'console'
 import type { contextType } from 'types/global'
-import type { EventType } from 'types/resolvers'
-import type { User } from 'types/resolvers'
-const { EventSchema: Event } = require('@models/Event')
+import type { CellType, User } from 'types/resolvers'
+const { CellSchema: Cell } = require('@models/Cell')
 const { graphQLError } = require('@helpers/errorHandler')
 const { StatusCodes } = require('http-status-codes')
 
-class EventServices {
-  async getEvents(user: Partial<User>) {
+class CellServices {
+  async getCells(user: Partial<User>) {
     try {
-      let event: EventType[]
+      let cell: CellType[]
 
-      //   event = await Event.find({ user: user.id });
-      event = await Event.find({})
+      //   cell = await Cell.find({ user: user.id });
+      cell = await Cell.find({})
 
       // console.log(calculateCurrentProgress)
-      return event
+      return cell
     } catch (error: unknown) {
       if (error instanceof Error) {
         graphQLError(error.message, StatusCodes.INTERNAL_SERVER_ERROR)
@@ -28,33 +26,33 @@ class EventServices {
     }
   }
 
-  async getEvent(id: string) {
+  async getCell(id: string) {
     // console.log(id)
-    const event = await Event.findById({ _id: id })
-    // console.log(event)
-    if (!event)
-      graphQLError(`There is not event with id ${id}, please try again!!!`)
-    return event
+    const cell = await Cell.findById({ _id: id })
+    // console.log(cell)
+    if (!cell)
+      graphQLError(`There is no cell with id ${id}, please try again!!!`)
+    return cell
   }
 
-  async createEvent(input: EventType, user: Partial<User>) {
+  async createCell(input: CellType, user: Partial<User>) {
     try {
       // await Goal.deleteMany()
       // console.log(input)
-      const event = new Event({ ...input, user: user.id })
-      await event.save()
-      if (!event)
+      const cell = new Cell({ ...input, createdBy: user.id })
+      await cell.save()
+      if (!cell)
         graphQLError(
-          'An error occured creating events, please try again',
+          'An error occured creating cells, please try again',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
 
-      // console.log(event)
+      // console.log(cell)
       return {
-        id: event.id,
-        user: user.id,
+        id: cell.id,
+        cell, 
         success: true,
-        message: 'Event successfull added!',
+        message: 'Cell successfull added!',
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -68,14 +66,13 @@ class EventServices {
     }
   }
 
-  async updateEvent(input: EventType, id: string, user: Partial<User>) {
-    // console.log('entered update event')
+  async updateCell(input: CellType, id: string, user: Partial<User>) {
+    // console.log('entered update cell')
     try {
-      const event = await Event.findByIdAndUpdate(
+      const cell = await Cell.findByIdAndUpdate(
         { _id: id },
         {
           ...input,
-          user: user.id,
         },
         {
           new: true,
@@ -83,18 +80,18 @@ class EventServices {
         }
       )
 
-      if (!event)
+      if (!cell)
         graphQLError(
-          'An error occured updating events, please try again',
+          'An error occured updating cells, please try again',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
 
-      // console.log('event', event)
+      // console.log('cell', cell)
       return {
-        event,
+        cell,
         user: user.id,
         success: true,
-        message: 'Event updated!',
+        message: 'Cell updated!',
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -107,21 +104,21 @@ class EventServices {
       }
     }
   }
-  async deleteEvent(id: string, user: Partial<User>) {
+  async deleteCell(id: string, user: Partial<User>) {
     try {
-      if (!id) graphQLError('No event id provided', StatusCodes.BAD_REQUEST)
-      const event = await Event.findByIdAndDelete({ _id: id })
-      // console.log(event)
+      if (!id) graphQLError('No cell id provided', StatusCodes.BAD_REQUEST)
+      const cell = await Cell.findByIdAndDelete({ _id: id })
+      // console.log(cell)
       // console.log('id', id)
-      if (!event)
+      if (!cell)
         graphQLError(
-          'Unknown id for selected event!',
+          'Unknown id for selected cell!',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
       return {
-        deleteEvent: event,
+        deleteCell: cell,
         success: true,
-        message: 'Event deleted!',
+        message: 'Cell deleted!',
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -136,4 +133,4 @@ class EventServices {
   }
 }
 
-module.exports = new EventServices()
+module.exports = new CellServices()

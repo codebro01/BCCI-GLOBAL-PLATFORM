@@ -1,12 +1,88 @@
 type Cell {
   id: ID!
-  name: String!
-  cluster: Cluster!
-  members: [User]
-  leader: User
-  announcements: [String]
+  cellName: String
+  cellType: String
+  meetingLocation: String
+  meetingTime: String
+  cluster: ID
+  membershipTarget: Int
+  monthlyBudget: Int
+  cellLeader: ID
+  members: [ID]
+  maxCapacity: Int
+  communicationTools: CommunicationTools
+  location: String
+  createdAt: String
+  updatedAt: String
+}
+
+type CommunicationTools {
+  chatId: String
+  announcementBoardId: String
+}
+
+input CommunicationToolsInput {
+  chatId: String
+  announcementBoardId: String
+}
+
+input CreateCellInput {
+  cellName: String
+  cellType: String
+  meetingLocation: String
+  meetingTime: String
+  cluster: ID
+  membershipTarget: Int
+  monthlyBudget: Int
+  cellLeader: ID
+  members: [ID]
+  maxCapacity: Int
+  communicationTools: CommunicationToolsInput
+  location: String
+}
+
+input UpdateCellInput {
+  cellName: String
+  cellType: String
+  meetingLocation: String
+  meetingTime: String
+  cluster: ID
+  membershipTarget: Int
+  monthlyBudget: Int
+  cellLeader: ID
+  members: [ID]
+  maxCapacity: Int
+  communicationTools: CommunicationToolsInput
+  location: String
+}
+
+type CreateCellResponse {
+  id: ID
+  cell: Cell
+  success: Boolean!
+  message: String!
+}
+
+type UpdateCellResponse {
+  id: ID
+  cell: Cell
+  success: Boolean!
+  message: String!
+}
+
+type DeleteCellResponse {
+  deletedCell: Cell
+  success: Boolean!
+  message: String!
 }
 
 type Query {
-  hello: String!
+  getCell(id: ID!): Cell
+  getCells: [Cell]
+}
+
+type Mutation {
+  createCell(input: CreateCellInput!): CreateCellResponse
+  updateCell(id: ID!, input: UpdateCellInput!): UpdateCellResponse
+  deleteCell(id: ID!): DeleteCellResponse
 }

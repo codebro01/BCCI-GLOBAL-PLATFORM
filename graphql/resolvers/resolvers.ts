@@ -4,9 +4,11 @@ const { loadFilesSync } = require('@graphql-tools/load-files')
 const userResolver = require('@graphql/resolvers/User.resolver')
 const authResolver = require('@graphql/resolvers/Auth.resolver')
 const goalResolver = require('@graphql/resolvers/Goal.resolver')
-const eventResolver = require('@graphql/resolvers/Event.resolver')
+const eventResolver = require('@graphql/resolvers/Event.resolver');
+const clusterResolver = require('@graphql/resolvers/Cluster.resolver')
+const cellResolver = require('@graphql/resolvers/Cell.resolver')
 
-const resolvers = [userResolver, authResolver, goalResolver, eventResolver]
+const resolvers = [userResolver, authResolver, goalResolver, eventResolver, cellResolver, clusterResolver]
 
 module.exports = mergeResolvers(resolvers)
 

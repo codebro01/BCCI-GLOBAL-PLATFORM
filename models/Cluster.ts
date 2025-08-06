@@ -1,12 +1,38 @@
-import { Schema, model } from 'mongoose';
 
-const clusterSchema = new Schema({
-  name: String,
-  region: String,
-  state: String,
-  country: String,
-  leaderId: { type: Schema.Types.ObjectId, ref: 'User' },
-  cellGroups: [{ type: Schema.Types.ObjectId, ref: 'Cell' }]
-}, { timestamps: true });
+const { Schema, model } = require('mongoose')
 
-export default model('Cluster', clusterSchema);
+const clusterSchema = new Schema(
+  {
+    clusterName: {
+      type: String,
+      required: [true, 'Cluster name is required'],
+    },
+    region: {
+      type: String,
+      required: [true, 'Cluster region is required'],
+    },
+    state: String,
+    membershipTarget: String,
+    cellTarget: String,
+    country: String,
+    clusterLeader: {
+      type: String,
+      ref: 'User',
+      required: [true, 'Cluster leader is required'],
+    },
+    cells: [{ type: Schema.Types.ObjectId, ref: 'Cell' }],
+    description: {
+      type: String,
+    },
+    createdBy: {
+      type: String,
+      ref: 'User',
+    },
+  },
+  { timestamps: true }
+)
+
+const ClusterSchema =  model('Cluster', clusterSchema);
+module.exports = {ClusterSchema}
+export {};
+

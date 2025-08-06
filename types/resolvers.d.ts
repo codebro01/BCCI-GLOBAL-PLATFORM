@@ -92,3 +92,42 @@ export type MinistryInvolvementType = {
   startDate: string
   endDate: string
 }
+
+export interface CommunicationTools {
+  chatId?: string
+  announcementBoardId?: string
+}
+
+export interface CellType {
+  _id: string
+  cellName?: string
+  cellType?: string
+  meetingLocation?: string
+  meetingTime?: string
+  cluster?: string // ID reference to Cluster
+  membershipTarget?: number
+  monthlyBudget?: number
+  cellLeader?: string // ID reference to User
+  members?: string[] // array of User IDs
+  maxCapacity?: number
+  communicationTools?: CommunicationTools
+  location?: string
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export interface ClusterType {
+  _id: string
+  clusterName: string
+  region: string
+  state?: string
+  membershipTarget?: string
+  cellTarget?: string
+  country?: string
+  clusterLeader: string // ID reference to User
+  cells?: string[] // array of Cell IDs
+  description?: string
+  createdAt?: Date
+  updatedAt?: Date
+}
+

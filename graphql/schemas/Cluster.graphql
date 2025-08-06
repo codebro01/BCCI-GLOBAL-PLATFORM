@@ -1,13 +1,69 @@
 type Cluster {
   id: ID!
-  name: String!
-  country: String!
-  state: String!
-  city: String!
-  leader: User
-  cells: [Cell]
+  clusterName: String!
+  region: String!
+  state: String
+  membershipTarget: String
+  cellTarget: String
+  country: String
+  clusterLeader: ID!
+  cells: [ID]
+  description: String
+  createdAt: String
+  updatedAt: String
+}
+
+input CreateClusterInput {
+  clusterName: String!
+  region: String!
+  state: String
+  membershipTarget: String
+  cellTarget: String
+  country: String
+  clusterLeader: ID!
+  cells: [ID]
+  description: String
+}
+
+input UpdateClusterInput {
+  clusterName: String
+  region: String
+  state: String
+  membershipTarget: String
+  cellTarget: String
+  country: String
+  clusterLeader: ID
+  cells: [ID]
+  description: String
+}
+
+type CreateClusterResponse {
+  id: ID
+  cluster: Cluster
+  success: Boolean!
+  message: String!
+}
+
+type UpdateClusterResponse {
+  id: ID
+  cluster: Cluster
+  success: Boolean!
+  message: String!
+}
+
+type DeleteClusterResponse {
+  deletedCluster: Cluster
+  success: Boolean!
+  message: String!
 }
 
 type Query {
-  hello: String!
+  getCluster(id: ID!): Cluster
+  getClusters: [Cluster!]
+}
+
+type Mutation {
+  createCluster(input: CreateClusterInput!): CreateClusterResponse
+  updateCluster(id: ID!, input: UpdateClusterInput!): UpdateClusterResponse
+  deleteCluster(id: ID!): DeleteClusterResponse
 }

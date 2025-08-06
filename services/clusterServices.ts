@@ -1,21 +1,19 @@
-import { Console } from 'console'
 import type { contextType } from 'types/global'
-import type { EventType } from 'types/resolvers'
-import type { User } from 'types/resolvers'
-const { EventSchema: Event } = require('@models/Event')
+import type { ClusterType, User } from 'types/resolvers'
+const { ClusterSchema: Cluster} = require('@models/Cluster')
 const { graphQLError } = require('@helpers/errorHandler')
 const { StatusCodes } = require('http-status-codes')
 
-class EventServices {
-  async getEvents(user: Partial<User>) {
+class ClusterServices {
+  async getClusters(user: Partial<User>) {
     try {
-      let event: EventType[]
+      let cluster: ClusterType[]
 
-      //   event = await Event.find({ user: user.id });
-      event = await Event.find({})
+      //   cluster = await Cluster.find({ user: user.id });
+      cluster = await Cluster.find({})
 
       // console.log(calculateCurrentProgress)
-      return event
+      return cluster
     } catch (error: unknown) {
       if (error instanceof Error) {
         graphQLError(error.message, StatusCodes.INTERNAL_SERVER_ERROR)
@@ -28,33 +26,32 @@ class EventServices {
     }
   }
 
-  async getEvent(id: string) {
+  async getCluster(id: string) {
     // console.log(id)
-    const event = await Event.findById({ _id: id })
-    // console.log(event)
-    if (!event)
-      graphQLError(`There is not event with id ${id}, please try again!!!`)
-    return event
+    const cluster = await Cluster.findById({ _id: id })
+    // console.log(cluster)
+    if (!cluster)
+      graphQLError(`There is no cluster with id ${id}, please try again!!!`)
+    return cluster
   }
 
-  async createEvent(input: EventType, user: Partial<User>) {
+  async createCluster(input: ClusterType, user: Partial<User>) {
     try {
-      // await Goal.deleteMany()
       // console.log(input)
-      const event = new Event({ ...input, user: user.id })
-      await event.save()
-      if (!event)
+      const cluster = new Cluster({ ...input, createdBy: user.id })
+      await cluster.save()
+      if (!cluster)
         graphQLError(
-          'An error occured creating events, please try again',
+          'An error occured creating clusters, please try again',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
 
-      // console.log(event)
+      // console.log(cluster)
       return {
-        id: event.id,
-        user: user.id,
+        id: cluster.id,
+        cluster,
         success: true,
-        message: 'Event successfull added!',
+        message: 'Cluster successfull added!',
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -68,14 +65,13 @@ class EventServices {
     }
   }
 
-  async updateEvent(input: EventType, id: string, user: Partial<User>) {
-    // console.log('entered update event')
+  async updateCluster(input: ClusterType, id: string, user: Partial<User>) {
+    // console.log('entered update cluster')
     try {
-      const event = await Event.findByIdAndUpdate(
+      const cluster = await Cluster.findByIdAndUpdate(
         { _id: id },
         {
-          ...input,
-          user: user.id,
+          ...input
         },
         {
           new: true,
@@ -83,18 +79,18 @@ class EventServices {
         }
       )
 
-      if (!event)
+      if (!cluster)
         graphQLError(
-          'An error occured updating events, please try again',
+          'An error occured updating clusters, please try again',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
 
-      // console.log('event', event)
+      // console.log('cluster', cluster)
       return {
-        event,
+        cluster,
         user: user.id,
         success: true,
-        message: 'Event updated!',
+        message: 'Cluster updated!',
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -107,21 +103,21 @@ class EventServices {
       }
     }
   }
-  async deleteEvent(id: string, user: Partial<User>) {
+  async deleteCluster(id: string, user: Partial<User>) {
     try {
-      if (!id) graphQLError('No event id provided', StatusCodes.BAD_REQUEST)
-      const event = await Event.findByIdAndDelete({ _id: id })
-      // console.log(event)
+      if (!id) graphQLError('No cluster id provided', StatusCodes.BAD_REQUEST)
+      const cluster = await Cluster.findByIdAndDelete({ _id: id })
+      // console.log(cluster)
       // console.log('id', id)
-      if (!event)
+      if (!cluster)
         graphQLError(
-          'Unknown id for selected event!',
+          'Unknown id for selected cluster!',
           StatusCodes.INTERNAL_SERVER_ERROR
         )
       return {
-        deleteEvent: event,
+        deleteCluster: cluster,
         success: true,
-        message: 'Event deleted!',
+        message: 'Cluster deleted!',
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -136,4 +132,4 @@ class EventServices {
   }
 }
 
-module.exports = new EventServices()
+module.exports = new ClusterServices()
