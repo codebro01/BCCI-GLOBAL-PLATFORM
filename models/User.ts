@@ -8,23 +8,43 @@ const userSchema = new Schema(
       type: String,
       default: () => nanoid(8), // override ObjectId
     },
-    firstName: {
+
+    fullName: {
+      type: String,
+    },
+    username: {
       type: String,
       required: true,
+      unique: true,
     },
-    surname: {
+    DOB: {
+      type: Date,
+    },
+    gender: {
       type: String,
-      required: true,
+      enum: {
+        values: ['Male', 'Female'],
+        message: 'Select either Male or Female for gender',
+      },
     },
-    otherNames: {
-      type: String,
-      required: true,
-    },
-    email: { type: String, unique: true },
+    // firstName: {
+    //   type: String,
+    //   required: true,
+    // },
+    // surname: {
+    //   type: String,
+    //   required: true,
+    // },
+    // otherNames: {
+    //   type: String,
+    //   required: true,
+    // },
+    email: { type: String, unique: true, required: true },
     phone: String,
     password: {
       type: String,
       required: true,
+      select: false,
     },
     roles: {
       type: Array,
@@ -75,11 +95,11 @@ userSchema.pre('save', async function () {
 })
 
 userSchema.methods.comparePwd = async function (userPwd: string) {
-  const compare = bcryptjs.compare(userPwd, this.password)
+  const compare = await bcryptjs.compare(userPwd, this.password)
   return compare
 }
 userSchema.methods.compareRefreshToken = async function (refreshToken: string) {
-  const compare = bcryptjs.compare(refreshToken, this.refreshToken)
+  const compare = await bcryptjs.compare(refreshToken, this.refreshToken)
   return compare
 }
 

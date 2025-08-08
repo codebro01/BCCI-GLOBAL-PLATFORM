@@ -1,12 +1,13 @@
 type User {
   id: ID!
-  firstName: String!
-  surname: String!
-  otherNames: String!
-  email: String!
-  phone: String
-  password: String!
+  fullName: String!
+  username: String!
   roles: [String!]!
+  DOB: String
+  gender: Gender
+  phone: String
+  email: String!
+  location: String
   country: String
   state: String
   city: String
@@ -15,42 +16,59 @@ type User {
   bookmarkedContent: [ID]
   contributionHistory: [Contribution]
   spiritualGoals: [String]
+  # password: String!
+  # firstName: String
+  # surname: String
+  # otherNames: String
 }
-
-
+enum Gender {
+  Male
+  Female
+}
 
 type LoginResponse {
   message: String
 }
 
 input UserInput {
-  firstName: String!
-  surname: String!
-  otherNames: String!
+  fullName: String
+  username: String!
+  DOB: String
+  gender: Gender
+  location: String
   email: String!
   phone: String
   password: String!
+  confirmPassword: String!
   roles: [String!]!
   country: String
-  state: String
+  state: String!
   city: String
   clusterId: ID
   cellId: ID
   bookmarkedContent: [ID]
   spiritualGoals: [String]
+  # otherNames: String
+  # firstName: String
+  # surname: String
 }
 input updateUserInput {
-  firstName: String
-  surname: String
-  otherNames: String
+  fullName: String
+  DOB: String
+  gender: Gender
+  email: String
   phone: String
   country: String
   state: String
+  location: String
   city: String
   clusterId: ID
   cellId: ID
   bookmarkedContent: [ID]
   spiritualGoals: [String]
+  # firstName: String
+  # surname: String
+  # otherNames: String
 }
 
 input LoginUserInput {
@@ -71,7 +89,7 @@ input changePasswordInput {
 }
 
 type logOutResponse {
-  message: String!, 
+  message: String!
   success: Boolean!
   loggedOutUser: User
   loggedOutAt: String

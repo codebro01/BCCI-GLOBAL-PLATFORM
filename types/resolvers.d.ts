@@ -3,9 +3,15 @@ import { Document } from 'mongoose'
 export type ID = string
 export type User = {
   id: ?ID
-  firstName: string
-  surname: string
-  otherNames: string
+  fullName: String
+  username: String
+  DOB: String
+  location: String
+  gender: 'Male' | 'Female'
+  // firstName: string
+  // surname: string
+  // otherNames: string
+  confirmPassword: String
   email: string
   phone: string
   password: string
@@ -18,23 +24,14 @@ export type User = {
   bookmarkedContent: [ID]
   contributionHistory: [Contribution]
   spiritualGoals: [string]
+  roles: [Role]
 }
-export type updateUserFields = Partial<{
-  firstName: string
-  surname: string
-  otherNames: string
-  email: string
-  phone: string
-  roles: [string]
-  country: string
-  state: string
-  city: string
-  cluster: Cluster
-  cell: Cell
-  bookmarkedContent: [ID]
-  contributionHistory: [Contribution]
-  spiritualGoals: [string]
-}>
+
+enum Role {
+  'ADMIN', 
+  'USER'
+}
+export type updateUserFields = Partial<User>
 
 export type Goal = {
   id: ?string

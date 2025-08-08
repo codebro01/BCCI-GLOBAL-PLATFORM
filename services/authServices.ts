@@ -14,7 +14,12 @@ import type { contextType } from 'types/global'
 
 type userDataType = Pick<
   UserType,
-  'email' | 'firstName' | 'password' | 'surname' | 'otherNames' | 'roles'
+  | 'email'
+  | 'password'
+  | 'roles'
+  | 'confirmPassword'
+  | 'state'
+  | 'phone'
 >
 
 class AuthServices {
@@ -22,8 +27,11 @@ class AuthServices {
     // await User.deleteMany()
     const emailExist = await User.findOne({ email: userData.email })
     if (emailExist)
-      return graphQLError('Email Already exist', StatusCodes.CONFLICT)
-    const user = new User({ ...userData })
+      return graphQLError('Email Already exist', StatusCodes.CONFLICT);
+
+    if (userData.password !== userData.confirmPassword)       return graphQLError('Password Mismatch', StatusCodes.CONFLICT)
+
+      const user = new User({ ...userData })
     await user.save()
     const tokenUser = createTokenUser(user)
 
@@ -53,18 +61,20 @@ class AuthServices {
     context: contextType,
     userData: Pick<UserType, 'email' | 'password'>
   ) {
-    const user = await User.findOne({ email: userData.email })
-    // console.log(user, 'before chcking pwd')
-    if (!user) return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND)
 
-    const passwordCorrect = await user.comparePwd(userData.password)
-    // console.log(passwordCorrect, 'check password')
-    if (!passwordCorrect)
-      return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND)
-    const tokenUser = createTokenUser(user)
+    const user = await User.findOne({ email: userData.email }).select('+password')
+    if (!user) return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND)
+      // console.log(user, 'before chcking pwd')
+      
+      // console.log('entered login user', userData.password)
+      const passwordCorrect = await user.comparePwd(userData.password)
+      // console.log(passwordCorrect, 'check password')
+      if (!passwordCorrect)
+        return graphQLError('Invalid Credentials', StatusCodes.NOT_FOUND)
+      const tokenUser = createTokenUser(user)
+
 
     const platform = detectPlatform(context.req)
-    // console.log('platform', platform)
     if (platform === 'web') {
       sendAccessTokenCookie(context, tokenUser)
       const refreshToken = sendRefreshTokenCookie(context, tokenUser)

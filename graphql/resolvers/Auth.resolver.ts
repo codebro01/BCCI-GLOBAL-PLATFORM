@@ -13,17 +13,23 @@ module.exports = {
       { user }: { user: User },
       context: contextType
     ) => {
-      const validatedInputs = safeValidate(signUpSchema, user)
+      try {
+        const validatedInputs = safeValidate(signUpSchema, user)
+  
+        if (!validatedInputs.success) {
 
-      if (!validatedInputs.success) {
-        validatedInputs.errors.map((error: ErrorObjectType) => {
-          throw new Error(error.message)
-        })
-        return
+          validatedInputs.errors.map((error: ErrorObjectType) => {
+            console.log(error)
+            throw new Error(`${error.field} is ${error.message}`)
+          })
+          return
+        }
+        // console.log({ ...validatedInputs.data })
+        /* ... */
+        return AuthServices.createUser(context, validatedInputs.data)
+      } catch (error) {
+        console.log(error)
       }
-      // console.log({ ...validatedInputs.data })
-      /* ... */
-      return AuthServices.createUser(context, validatedInputs.data)
     },
     loginUser: (
       _: unknown,
@@ -39,6 +45,8 @@ module.exports = {
         })
         return
       }
+
+      console.log('inputs validated')
       /* ... */
       return AuthServices.loginUser(context, validatedInputs.data)
     },

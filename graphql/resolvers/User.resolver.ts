@@ -18,7 +18,7 @@ module.exports = {
   Query: {
     users: async (_: unknown, {}, context: contextType) => {
       console.log('entered the resolver')
-      const user = await authMiddleware(context);
+      const user = await authMiddleware(context)
       // console.log('user from resolver', user)
       RBAC(user, ['ADMIN'])
       return UserServices.getUsers()
@@ -47,13 +47,17 @@ module.exports = {
       }
       return UserServices.updateUser(resUser, user)
     },
-    deleteUser: async (_: unknown, { id }: { id: string }, context: contextType) => {
+    deleteUser: async (
+      _: unknown,
+      { id }: { id: string },
+      context: contextType
+    ) => {
       const user = await authMiddleware(context)
       RBAC(user, ['ADMIN'])
       /* ... */
       return UserServices.deleteUser(id)
     },
-    updateUserPassword:async (
+    updateUserPassword: async (
       _: unknown,
       {
         passwordData,

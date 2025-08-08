@@ -1,18 +1,25 @@
 import { z } from 'zod'
 
 const signUpSchema = z.object({
-  firstName: z.string(),
-  surname: z.string(),
-  otherNames: z.string(),
+  // firstName: z.string(),
+  // surname: z.string(),
+  // otherNames: z.string(),
+  fullName: z.string().optional(),
+  username: z.string(),
+  DOB: z.string().optional(),
+  gender: z.string().optional(),
   email: z.string().email({ message: 'Invalid email format' }), // ✅ Fixed
   roles: z.array(z.string()),
   id: z.string().optional(),
   password: z
     .string()
     .min(5, { message: 'Password must be at least 5 characters' }),
-  phone: z.string().optional(),
+  confirmPassword: z
+    .string()
+    .min(5, { message: 'Password must be at least 5 characters' }),
+  phone: z.string(),
   country: z.string().optional(),
-  state: z.string().optional(),
+  state: z.string(),
   city: z.string().optional(),
   cluster: z.record(z.string()).optional(), //  Accepts object like { key: "value" }
   cell: z.record(z.string()).optional(),
@@ -63,19 +70,16 @@ export const updateGoalSchema = z.object({
 })
 
 export const idSchema = z.object({
-  id: z.string()
+  id: z.string(),
 })
 
-export const EventStatusEnum = z.enum(['PENDING', 'CONFIRMED']);
-
+export const EventStatusEnum = z.enum(['PENDING', 'CONFIRMED'])
 
 export const createEventSchema = z.object({
   title: z.string().min(1, 'Event title is required'),
-  date: z
-    .string()
-    .refine((val) => !isNaN(Date.parse(val)), {
-      message: 'Invalid date format',
-    }),
+  date: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: 'Invalid date format',
+  }),
   time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
     message: 'Invalid time format (HH:mm expected)',
   }),
@@ -97,7 +101,6 @@ export const updateEventSchema = z.object({
   status: EventStatusEnum.optional(),
 })
 
-
 export const communicationToolsSchema = z.object({
   chatId: z.string().optional(),
   announcementBoardId: z.string().optional(),
@@ -108,9 +111,7 @@ export const cellSchema = z.object({
   cellType: z.string().optional(),
   meetingLocation: z.string().optional(),
   meetingTime: z.string().optional(),
-  cluster: z
-    .string()
-    .optional(), // ObjectId as string
+  cluster: z.string().optional(), // ObjectId as string
   membershipTarget: z.number().optional(),
   monthlyBudget: z.number().optional(),
   cellLeader: z.string().optional(),
@@ -132,7 +133,6 @@ export const clusterSchema = z.object({
   description: z.string().optional(),
 })
 
-
 module.exports = {
   signUpSchema,
   loginSchema,
@@ -140,9 +140,9 @@ module.exports = {
   goalSchema,
   updateGoalSchema,
   idSchema,
-  createEventSchema, 
+  createEventSchema,
   updateEventSchema,
-  EventStatusEnum, 
-  cellSchema, 
-  clusterSchema, 
+  EventStatusEnum,
+  cellSchema,
+  clusterSchema,
 }
