@@ -1,6 +1,6 @@
 type User {
   id: ID!
-  fullName: String!
+  fullName: String
   username: String!
   roles: [String!]!
   DOB: String

@@ -8,7 +8,6 @@ import type { contextType, RoleType } from 'types/global'
 import type { tokenUserType } from 'types/jwt_tokenUser'
 
 const authMiddleware = async (context: contextType) => {
-
   // console.log(context.req.headers)
   // console.log('entered auth middleware func')
   const access_token =
@@ -45,14 +44,12 @@ const authMiddleware = async (context: contextType) => {
       // console.log('decodedRefreshToken', decodedRefreshToken)
       if (!decodedRefreshToken)
         graphQLError('Invalid User', StatusCodes.UNAUTHORIZED)
-      const { email, id, firstName, surname, otherNames, roles } =
-        decodedRefreshToken
+      const { email, id, fullName, username, roles } = decodedRefreshToken
       const newAccessTokenPayload = {
         email,
         id,
-        firstName,
-        surname,
-        otherNames,
+        fullName,
+        username,
         roles,
       }
       if (decodedRefreshToken) {
@@ -70,9 +67,8 @@ const authMiddleware = async (context: contextType) => {
         decodedAccessToken = {
           email,
           id,
-          firstName,
-          surname,
-          otherNames,
+          fullName,
+          username,
           roles,
         }
         // console.log('decodedAccessToken', decodedAccessToken)

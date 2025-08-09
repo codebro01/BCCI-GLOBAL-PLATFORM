@@ -31,11 +31,11 @@ class UserServices {
     return user
   }
   async updateUser(userInfo: Partial<UserType>, updateData: updateUserFields) {
-    console.log(updateData)
     const { id } = userInfo
+
     if (!id) graphQLError('No id was provided', StatusCodes.NOT_ACCEPTABLE)
     const user = await User.findOne({ _id: id })
-
+    // console.log(user)
     if (!user)
       graphQLError(
         `Could not find user with Id: ${id}`,
@@ -50,15 +50,16 @@ class UserServices {
           StatusCodes.CONFLICT
         )
     }
-    if (updateData.username) {
-      const usernameExist = await User.findOne({ username: updateData.username }).collation({locale: "en", strength: 2})
-
+    const usernameExist = await User.findOne({ username: updateData?.username }).collation({locale: "en", strength: 2})
+    
+    console.log('update data ', updateData)
+    console.log('usernameExist', usernameExist)
       if (usernameExist)
         graphQLError(
           'username taken,please use another username',
           StatusCodes.CONFLICT
         )
-    }
+    
     console.log('updateData', updateData)
     Object.assign(user, updateData)
     await user.save()

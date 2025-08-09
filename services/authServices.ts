@@ -33,7 +33,7 @@ class AuthServices {
     })
     if (emailExist)
       return graphQLError(
-        'Email Already exist, please select another username',
+        'Email Already exist, please select another email',
         StatusCodes.CONFLICT
       )
 
@@ -58,9 +58,9 @@ class AuthServices {
     // console.log(platform)
     if (platform === 'web') {
       sendAccessTokenCookie(context, tokenUser)
-     const refreshToken =  sendRefreshTokenCookie(context, tokenUser)
-      user.refreshToken = refreshToken;
-      await user.save();
+      const refreshToken = sendRefreshTokenCookie(context, tokenUser)
+      user.refreshToken = refreshToken
+      await user.save()
     }
     if (platform === 'mobile') {
       const accessToken = generateAccessToken(
@@ -72,11 +72,11 @@ class AuthServices {
         process.env.REFRESH_TOKEN_SECRET
       )
 
-      user.refreshToken = refreshToken;
+      user.refreshToken = refreshToken
       await user.save()
 
       // console.log(accessToken)
-      context.res.setHeader('x-access-token', accessToken)
+      // context.res.setHeader('x-access-token', accessToken)
       context.res.setHeader('x-refresh-token', refreshToken)
       // console.log({...user, token: accessToken})
       return { ...user._doc, token: accessToken, id: user._id }
@@ -103,6 +103,7 @@ class AuthServices {
     const tokenUser = createTokenUser(user)
 
     const platform = detectPlatform(context.req)
+    console.log(platform)
     if (platform === 'web') {
       sendAccessTokenCookie(context, tokenUser)
       const refreshToken = sendRefreshTokenCookie(context, tokenUser)
@@ -118,7 +119,8 @@ class AuthServices {
         tokenUser,
         process.env.REFRESH_TOKEN_SECRET
       )
-      context.res.setHeader('x-access-token', accessToken)
+      // context.res.setHeader('x-access-token', accessToken)
+      console.log(refreshToken)
       context.res.setHeader('x-refresh-token', refreshToken)
       user.refreshToken = refreshToken
 
@@ -126,12 +128,12 @@ class AuthServices {
 
       console.log(accessToken)
 
-      return { message: 'Login Successful!!', token: accessToken }
+      return { message: 'Login Successful!!', token: refreshToken }
     }
 
     // console.log(context.res.getHeaders())
 
-    return { message: 'Login Succesfull!!! 🚀' }
+    return { message: 'Login Succesfull!!! 🚀', token: 'token' }
   }
 }
 

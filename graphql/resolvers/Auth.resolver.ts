@@ -15,9 +15,8 @@ module.exports = {
     ) => {
       try {
         const validatedInputs = safeValidate(signUpSchema, user)
-  
-        if (!validatedInputs.success) {
 
+        if (!validatedInputs.success) {
           validatedInputs.errors.map((error: ErrorObjectType) => {
             console.log(error)
             throw new Error(`${error.field} is ${error.message}`)
@@ -36,7 +35,6 @@ module.exports = {
       { user }: { user: Pick<User, 'email' | 'password'> },
       context: contextType
     ) => {
-      console.log('login user', user)
       const validatedInputs = safeValidate(loginSchema, user)
 
       if (!validatedInputs.success) {
