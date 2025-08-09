@@ -35,6 +35,7 @@ module.exports = {
       { user }: { user: User },
       context: contextType
     ) => {
+      console.log(user)
       const validatedInputs = safeValidate(updateUserSchema, user)
 
       const resUser = await authMiddleware(context)

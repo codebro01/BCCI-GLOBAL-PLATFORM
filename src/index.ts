@@ -73,6 +73,9 @@ const startServer = async () => {
       ) {
         code = originalError.code
       }
+
+
+      
       return {
         message: err.message,
         code: err.extensions?.code || 'INTERNAL_SERVER_ERRO',

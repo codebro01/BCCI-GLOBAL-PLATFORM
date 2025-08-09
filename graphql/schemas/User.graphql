@@ -16,6 +16,7 @@ type User {
   bookmarkedContent: [ID]
   contributionHistory: [Contribution]
   spiritualGoals: [String]
+  token: String
   # password: String!
   # firstName: String
   # surname: String
@@ -28,6 +29,7 @@ enum Gender {
 
 type LoginResponse {
   message: String
+  token: String
 }
 
 input UserInput {
@@ -54,6 +56,7 @@ input UserInput {
 }
 input updateUserInput {
   fullName: String
+  username: String
   DOB: String
   gender: Gender
   email: String

@@ -31,6 +31,7 @@ class UserServices {
     return user
   }
   async updateUser(userInfo: Partial<UserType>, updateData: updateUserFields) {
+    console.log(updateData)
     const { id } = userInfo
     if (!id) graphQLError('No id was provided', StatusCodes.NOT_ACCEPTABLE)
     const user = await User.findOne({ _id: id })
@@ -40,12 +41,21 @@ class UserServices {
         `Could not find user with Id: ${id}`,
         StatusCodes.INTERNAL_SERVER_ERROR
       )
-    if (updateData.email !== user.email) {
-      const emailExist = await User.findOne({ email: updateData.email })
+    if (updateData.email) {
+      const emailExist = await User.findOne({ email: updateData.email }).collation({locale: "en", strength: 2})
 
       if (emailExist)
         graphQLError(
           'Email taken,please use another email',
+          StatusCodes.CONFLICT
+        )
+    }
+    if (updateData.username) {
+      const usernameExist = await User.findOne({ username: updateData.username }).collation({locale: "en", strength: 2})
+
+      if (usernameExist)
+        graphQLError(
+          'username taken,please use another username',
           StatusCodes.CONFLICT
         )
     }

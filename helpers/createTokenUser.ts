@@ -1,9 +1,6 @@
 import type { User } from 'types/resolvers'
 
-type createTokenUserType = Pick<
-  User,
-  'email' | 'roles' | 'id' | 'username'
->
+type createTokenUserType = Pick<User, 'email' | 'roles' | 'id' | 'username'>
 
 const createTokenUser = (user: createTokenUserType): createTokenUserType => {
   return {
@@ -14,4 +11,4 @@ const createTokenUser = (user: createTokenUserType): createTokenUserType => {
   }
 }
 
-module.exports = {createTokenUser};
+module.exports = { createTokenUser }

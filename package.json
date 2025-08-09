@@ -13,7 +13,6 @@
   },
   "author": "Victor Damilola",
   "license": "",
-
   "_moduleAliases": {
     "@controller": "dist/controller",
     "@model": "dist/model",
@@ -29,7 +28,6 @@
     "@models": "dist/models",
     "@db": "dist/db"
   },
-
   "dependencies": {
     "@apollo/server": "^4.12.2",
     "@graphql-tools/load-files": "^7.0.1",

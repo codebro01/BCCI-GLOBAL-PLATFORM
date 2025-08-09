@@ -47,8 +47,12 @@ const userSchema = new Schema(
       select: false,
     },
     roles: {
-      type: Array,
+      type: [String],
       required: true,
+      enum: {
+        values: ["ADMIN", "USER"], 
+        message: "Invalid role for user!!!"
+      }
     },
     location: {
       country: String,
@@ -92,7 +96,16 @@ userSchema.pre('save', async function () {
     const salt = await bcryptjs.genSalt(10)
     this.refreshToken = await bcryptjs.hash(this.refreshToken, salt)
   }
+
+    if (this.username) {
+      this.username = this.username.toLowerCase()
+    }
+    if (this.email) {
+      this.username = this.username.toLowerCase()
+    }
 })
+
+
 
 userSchema.methods.comparePwd = async function (userPwd: string) {
   const compare = await bcryptjs.compare(userPwd, this.password)
