@@ -79,7 +79,7 @@ class AuthServices {
       // context.res.setHeader('x-access-token', accessToken)
       context.res.setHeader('x-refresh-token', refreshToken)
       // console.log({...user, token: accessToken})
-      return { ...user._doc, token: accessToken, id: user._id }
+      return { ...user._doc, token: refreshToken, id: user._id }
     }
 
     return user
