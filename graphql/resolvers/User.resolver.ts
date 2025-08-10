@@ -38,7 +38,9 @@ module.exports = {
       const validatedInputs = safeValidate(updateUserSchema, user)
 
       const resUser = await authMiddleware(context)
-      console.log('resUser', resUser)
+
+            RBAC(resUser, ['ADMIN', 'USER'])
+
       if (!validatedInputs.success) {
         validatedInputs.errors.map((error: ErrorObjectType) => {
           throw new Error(error.message)
