@@ -28,7 +28,8 @@ enum Gender {
 }
 
 type LoginResponse {
-  message: String
+  user: User
+  message: String!
   token: String
 }
 

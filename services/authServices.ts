@@ -126,14 +126,14 @@ class AuthServices {
 
       await user.save()
 
-      console.log(accessToken)
+      const formattedUser = {...user.toObject(), id: user._id}
 
-      return { message: 'Login Successful!!', token: refreshToken }
+      return { message: 'Login Successful!!', token: refreshToken, user:formattedUser }
     }
 
     // console.log(context.res.getHeaders())
 
-    return { message: 'Login Succesfull!!! 🚀', token: 'token' }
+    return { message: 'Login Succesfull!!! 🚀', user: user.toObject()}
   }
 }
 
