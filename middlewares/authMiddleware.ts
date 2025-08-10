@@ -6,15 +6,30 @@ import { access } from 'fs'
 import { decode } from 'punycode'
 import type { contextType, RoleType } from 'types/global'
 import type { tokenUserType } from 'types/jwt_tokenUser'
+const detectPlatform = require('@helpers/detectPlatform')
 
 const authMiddleware = async (context: contextType) => {
   // console.log(context.req.headers)
-  // console.log('entered auth middleware func')
-  const access_token =
-    context.req.cookies.access_token || context.req.headers['x-access-token']
-  const refresh_token =
-    context.req.cookies.refresh_token || context.req.headers['x-refresh-token']
-  // console.log(access_token, refresh_token)
+  // console.log('entered auth middleware func');
+
+  const platform = detectPlatform(context.req)
+  let access_token
+  let refresh_token
+
+  console.log(platform)
+
+  access_token = null
+  refresh_token = context.req.headers['x-refresh-token']
+
+  if (platform === 'web') {
+    access_token = context.req.cookies.access_token
+    refresh_token = context.req.cookies.refresh_token
+  }
+
+  // console.log('access_token', context.req.cookies.access_token)
+  // console.log('refresh_token', context.req.cookies.refresh_token)
+
+  // console.log('header token', context.req.headers['x-refresh-token'])
   let decodedAccessToken
   let decodedRefreshToken
   // console.log('access_token', access_token)
@@ -61,7 +76,8 @@ const authMiddleware = async (context: contextType) => {
 
         if (!validRefreshToken)
           graphQLError('Token Mismatch', StatusCodes.BAD_REQUEST)
-        sendAccessTokenCookie(context, newAccessTokenPayload)
+        if (platform === 'web')
+          sendAccessTokenCookie(context, newAccessTokenPayload)
 
         // console.log('newlySentAccessToken', newlySentAccessToken)
         decodedAccessToken = {
@@ -95,6 +111,8 @@ const authMiddleware = async (context: contextType) => {
   if (!decodedAccessToken && !decodedRefreshToken) {
     graphQLError('Invalid or expired token', StatusCodes.UNAUTHORIZED)
   }
+
+  if(platform === 'mobile') return decodedRefreshToken;
 
   return decodedAccessToken
 }
